@@ -1,17 +1,15 @@
 <!doctype html>
 <meta charset="utf-8">
 <link rel="stylesheet" href="../../static/style.css">
-<title>getting back ctrl over ctrl+alt+arrow in gnome — mysite</title>
+<title>getting back ctrl over ctrl+alt+arrow in gnome — Jürgen Gmach</title>
 <body>
   <header>
-    <h1>mysite</h1>
+    <h1>Jürgen Gmach</h1>
     <nav>
       <ul class="nav navbar-nav">
-        <li><a href="../../">Welcome</a></li>
+        <li><a href="../../">About me</a></li>
         
           <li class="active"><a href="../../blog/">Blog</a></li>
-        
-          <li><a href="../../about/">About</a></li>
         
       </ul>
     </nav>
@@ -59,7 +57,7 @@ $ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left []
 <h2>the explanation</h2>
 <p>I call not showing the shortcuts on the settings page a bug, or at very least a usability problem. Speaking of usability problems, on the settings page you can only see one shortcut per action, even when there are defined two or more.</p>
 <p>Luckily, as shown above, there are ways to counter those problems.</p>
-<p>In order to save configurations both for the desktop itself and for its applications, Gnome uses a configuration system called <strong>gconf</strong>. I think of it as simple key-value database.</p>
+<p>In order to save preferences both for the system and for applications, Gnome uses a configuration system called <strong>gconf</strong>. I think of it as simple key-value database.</p>
 <p>There are several ways to access this database, amongst there are:</p>
 <ul>
 <li><strong>gsettings</strong></li>
