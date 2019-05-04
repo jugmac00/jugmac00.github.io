@@ -75,6 +75,17 @@
 <p>It is highly recommended that all code changes, bug fixes and new features should be tested by automatic tests.</p>
 <p>Unlike most other Python projects, <strong>Zope/universe</strong> does not make use of pytest - which can be both quite surprising and a bit of a hurdle.</p>
 <p><strong>Zope/universe</strong> makes heavily use of <a href="https://pypi.org/project/zope.testrunner/">zope.testrunner</a>.</p>
+<h3>supported python versions</h3>
+<p>Currently, Python 2.7, 3.5, 3.6, 3.7 and 3.8 (dev) are supported for most of the <strong>Zope 4/universe</strong> packages. This reflects the officially supported Python versions.</p>
+<p>Some packages also support <a href="https://pypy.org/">PyPy</a>.</p>
+<p>Afaik, there are plans to drop support for Python 2.7 with Zope 5.</p>
+<p>When adding support for a new Python version, or dropping support for an old one, you have to update several files:</p>
+<ul>
+<li>.travis.yml</li>
+<li>tox.ini</li>
+<li>setup.py</li>
+<li>CHANGES.rst</li>
+</ul>
 <h3>continuous integration - mostly via travisci</h3>
 <p>Whenever you push to a branch or make a pull request, <a href="https://travis-ci.org">TravisCI</a> automatically pulls your changes and runs the project's test suite.</p>
 <p>This is configured via a <strong>.travis.yml</strong> file at root level of the repository.</p>
@@ -95,6 +106,10 @@
 <p><strong>2019.05.03</strong></p>
 <ul>
 <li>update <strong>what makes it hard to start contributing to Zope</strong>; also add links</li>
+</ul>
+<p><strong>2019.05.04</strong></p>
+<ul>
+<li>add section about support Python versions</li>
 </ul>
 
   </div>
