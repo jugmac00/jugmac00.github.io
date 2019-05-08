@@ -102,7 +102,11 @@
 <ul>
 <li>flaky tests - sometimes tests fail for <strong>no reason</strong> - you can try to dig deeper or just re-run the build by clicking the "rebuild" button on the TravisCI website.</li>
 <li>bad cache =&gt; clear cache - rarely this is necessary; a re-run should do the job most of the time - please find more information at the <a href="https://docs.travis-ci.com/user/caching/#clearing-caches">TravisCI documentation site</a>.</li>
+<li><strong>ImportError: libpython3.8m.so.1.0</strong>: cannot open shared object file: No such file or directory" =&gt; clear cache in TravisCI and restart build 1)</li>
 </ul>
+<p>1) Information by Dieter Maurer:</p>
+<blockquote><p>The Python 3.8 problem was (likely) discussed in the Python mailing list today: the newest Python version has changed <strong>sys.implementation.cache_tag</strong> which prevents Python from finding shared objects installed for earlier versions. "pip" on the other hand seems not to take thin into account and thinks that the older version is still usable. Clearing the cache should fix the problem.</p>
+</blockquote>
 <h2>updates</h2>
 <p><strong>2019.05.03</strong></p>
 <ul>
