@@ -23,6 +23,35 @@
     
   <div class="blog-post">
   
+    <h1><a href="../blog/chrome-no-longer-shows-saved-passwords/">Chrome no longer shows saved passwords</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2019-05-20
+  </p>
+  <p>Concerning security and privacy, you either can get stalled because you can't get it perfect right from the beginning, or you improve over time.</p>
+<p>I prefer the latter one. And concerning <strong>password security</strong> I go with Troy Hunt: <a href="https://www.troyhunt.com/password-managers-dont-have-to-be-perfect-they-just-have-to-be-better-than-not-having-one/">Password managers don't have to be perfect, they just have to be better than not having one</a>.</p>
+<p>And actually the password manager of a browser is already a password manager. I would not use it for very important passwords, but it is absolutely fine for those dozens of dozens forum logins and so on. Currently, I still manage the more important passwords with <a href="https://www.veracrypt.fr/en/Home.html">VeraCrypt</a> - which is not that comfortable, but does its job.</p>
+<h2>works fine except when it does not</h2>
+<p>So, Google Chrome's password manager works fine for me... except when it does not.</p>
+<p>Chrome stopped showing the saved passwords - from one day to another. I can't recall whether it was the <a href="https://fedoramagazine.org/upgrading-fedora-28-fedora-29/">Fedora 28 -&gt; 29 Upgrade</a> or maybe a Chrome update.</p>
+<p>Anyway - it is extremely annoying to lookup passwords for every forum and and other sites which requires a login.</p>
+<h2>the easy fix</h2>
+<p>As I sync <del>everything</del> my profile with Google (hum, this sounds like something I should reevaluate some time) it is just a matter of deleting the broken profile and restarting <strong>Chrome</strong>.</p>
+<pre><code>$ cd /home/jugmac00/.config
+$ rm -rf google-chrome
+</code></pre>
+<p>It is as simple as that. And sure, I experience many more rough edges since I migrated to a Linux desktop, but I always feel like I keep the control and every problem is very easily fixable.</p>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../blog/recap-day-three-and-wrap-up-of-zope-spring-cleaning/">Recap day three and wrap up of &#34;Zope spring cleaning&#34;</a></h2>
   
   <p class="meta">
