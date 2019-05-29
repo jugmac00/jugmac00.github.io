@@ -23,6 +23,228 @@
     
   <div class="blog-post">
   
+    <h1><a href="../blog/am-i-famous/">Am I famous?</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2019-05-29
+  </p>
+  <p>A couple of months ago, Brett Cannon, one of the better known Python core developers, announced on <a href="https://twitter.com/brettsky/status/1096578335428112384">Twitter</a> that he contributed to over 100 open source projects.</p>
+<h2>first reaction</h2>
+<p>Woohah! Congratulations!</p>
+<h2>second reaction</h2>
+<p>How did he know?</p>
+<blockquote><p>Everytime I get a PR merged I record the repo's URL for a tool I created to analyze my contributions to OSS.</p>
+</blockquote>
+<p>Ah... k. I did not do that.</p>
+<h2>third reaction</h2>
+<p>To how many open source projects did I contribute? Well, I only started contributing recently, like one year ago or so... and as I said, I did not take any notes... but <strong>luckily</strong> nowadays like most open source development happens on Github. As far as I remember I only contributed to a couple projects which are not present on Github, and that was for <a href="https://bitbucket.org/flyingcircus/batou">batou</a> and <a href="http://trac.roundcube.net/">Roundcube</a>.</p>
+<p>So, if only Github provided some API to query the data it stored about me... well, it does.</p>
+<h2>say hello to graphql</h2>
+<p><strong>GraphQL</strong> is a query language for web APIs. It was developed by Facebook, and according to rumors it will supersede REST in the near future.</p>
+<p>Github kindly not only offers an API, but also an <a href="https://developer.github.com/v4/explorer/">in-browser IDE</a> (based on <a href="https://github.com/graphql/graphiql">GraphiQL</a>) to explore the data.</p>
+<h2>say hello to graphiql</h2>
+<p>When you first hit Github's instance of GraphiQL ( <a href="https://developer.github.com/v4/explorer/">https://developer.github.com/v4/explorer/</a> ), you will see something like this:</p>
+<p><img src="../blog/am-i-famous/github-graphiql-start.png" alt="Alt-Text"></p>
+<p>So, obviously, first you have to login with your Github credentials (green "Sign in with Github" button in the top right).</p>
+<h2>first encounter</h2>
+<p>When I first saw this page, I played around a bit and left - as I did not get what I wanted. Luckily, at last weekend's <strong>PyConWeb19</strong>, Arthur Bayr did a workshop on <a href="https://pyconweb.com/talks/25-05-2019/introduction-to-graphql-and-graphene">GraphQL and Graphene</a> - thanks a ton!</p>
+<p>Now I am ready to explore my data!</p>
+<h2>overview</h2>
+<p>On the top left, there is room to enter the query.</p>
+<p>On the right, the result will be shown.</p>
+<p>On the far right, there is the small, but super helpful <strong>Docs</strong> button.</p>
+<p>On the bottom left is something I did not use yet.</p>
+<h2>iteration one</h2>
+<p>After you have logged in, leave the query as is...</p>
+<pre><code>query { 
+  viewer { 
+    login
+  }
+}
+</code></pre>
+<p>...  and just hit the play button above the "query field".</p>
+<p>You should get a result similar to mine - but with your username</p>
+<pre><code>{
+  "data": {
+    "viewer": {
+      "login": "jugmac00"
+    }
+  }
+}
+</code></pre>
+<h3>explanation</h3>
+<ul>
+<li><strong>query</strong> outside the curly braces is just a name</li>
+<li><strong>viewer</strong> is a data type, and it happens to be the currently authenticated in user</li>
+<li><strong>login</strong> is a subfield of <strong>viewer</strong></li>
+</ul>
+<p>How do I know this?</p>
+<p>On the far right, there is the <strong>Docs</strong> button. Small button, but lots and lots of information! Actually, you can explore the complete API when you open the docs and follow the links.</p>
+<h2>iteration two</h2>
+<p>Either by reading the docs or by hitting <strong>CTRL+SPACE</strong> which triggers autocompletion when you are in the query box, you will eventually come across a subfield with name <strong>repositoriesContributedTo</strong> - that sounds fine!</p>
+<blockquote><p><strong><em>NOTE:</em></strong><br>
+You cannot query arbitrary data - all fields, subfields, parameters... have to be defined by the API provider.</p>
+</blockquote>
+<p>When you just enter the following...</p>
+<pre><code>query { 
+  viewer {
+    repositoriesContributedTo
+  } 
+}
+</code></pre>
+<p>... right below <strong>repostoriesContributetTo</strong> there will be a red squiggly line. When hover over the word, you can read "Field .. must have a selection of subfields".</p>
+<p>Whatever! The cool thing.. if you hit the <strong>play</strong> button anyway, the IDE autocompletes your query to...</p>
+<pre><code>query { 
+  viewer {
+    repositoriesContributedTo {
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  } 
+}
+</code></pre>
+<p>The result is... hm... an error message: "You must provide a <code>first</code> or <code>last</code> value to properly paginate the <code>repositoriesContributedTo</code> connection."</p>
+<p>Ok, let's do this.</p>
+<h2>iteration three</h2>
+<p>Generally speaking, it is a very good idea to force pagination on all APIs, which return lists - another thing I learned at PyConWeb19 - no slides, but there is a video from another conference: <a href="https://www.youtube.com/watch?v=WXSfE2rE3bM">Tech bankruptcy: Looking back on a decade of bad decision making</a></p>
+<p>The mentioned <strong>value</strong> is actually a parameter, and parameters are put into parenthesis behind a (sub)fieldname, just like...</p>
+<pre><code>query { 
+  viewer {
+    repositoriesContributedTo(first: 100) {
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  } 
+}
+</code></pre>
+<p>If you only type <strong>first</strong>, you get a friendly reminder to provide a number, which must not be greater than 100.</p>
+<p>The result...</p>
+<pre><code>{
+  "data": {
+    "viewer": {
+      "repositoriesContributedTo": {
+        "edges": [
+          {
+            "node": {
+              "id": "MDEwOlJlcG9zaXRvcnk2OTI2NTQ="
+            }
+          },
+...
+</code></pre>
+<p>... does not look to bad, but not very human readable.</p>
+<h2>iteration four</h2>
+<p>If you replace <strong>id</strong> with <strong>nameWithOwner</strong> (via API exploration STRG+SPACE or from the docs), you'll get much better data:</p>
+<pre><code>query { 
+  viewer {
+    repositoriesContributedTo(first: 100) {
+      edges {
+        node {
+          nameWithOwner
+        }
+      }
+    }
+  } 
+}
+</code></pre>
+<p>The result...</p>
+<pre><code>{
+  "data": {
+    "viewer": {
+      "repositoriesContributedTo": {
+        "edges": [
+          {
+            "node": {
+              "nameWithOwner": "python-babel/flask-babel"
+            }
+          },
+          {
+            "node": {
+              "nameWithOwner": "malthe/chameleon"
+            }
+          },
+...
+</code></pre>
+<p>But we want the total number of contributions.</p>
+<h2>iteration five</h2>
+<p>As I learned at the workshop, either the server or the client has to implement some count or sum functions, as you can only query what is offered (or process it client side).</p>
+<p>So, let's have another look, what <strong>repositoriesContributedTo</strong> has to offer...</p>
+<p>If you click on <strong>repositoriesContributedTo</strong> and then on <strong>RepositoryConnection!</strong> in the <strong>Docs</strong>, you'll see <strong>totalCount</strong> -  nice! And also, you'll see <strong>nodes</strong> - which can simplify the "first get all edges and then the corresponding nodes" syntax.</p>
+<pre><code>query { 
+  viewer {
+    repositoriesContributedTo(first: 100) {
+        totalCount
+        nodes {
+          nameWithOwner
+      }
+    }
+  } 
+}
+</code></pre>
+<p>The result...</p>
+<pre><code>{
+  "data": {
+    "viewer": {
+      "repositoriesContributedTo": {
+        "totalCount": 66,
+        "nodes": [
+          {
+            "nameWithOwner": "python-babel/flask-babel"
+          },
+          {
+            "nameWithOwner": "malthe/chameleon"
+          },
+...
+</code></pre>
+<p>Very nice.. except... also proprietary (private) repositories are listed...</p>
+<h2>iteration six</h2>
+<p>Visiting the docs again, <strong>repositoriesContributedTo</strong> offers a <strong>privacy</strong> parameter.</p>
+<pre><code>query { 
+  viewer {
+    repositoriesContributedTo(first: 100, privacy: PUBLIC) {
+        totalCount
+        nodes {
+          nameWithOwner
+      }
+    }
+  } 
+}
+</code></pre>
+<p>The final result...</p>
+<pre><code>{
+  "data": {
+    "viewer": {
+      "repositoriesContributedTo": {
+        "totalCount": 54,
+        "nodes": [
+          {
+            "nameWithOwner": "python-babel/flask-babel"
+          },
+          {
+            "nameWithOwner": "malthe/chameleon"
+          },
+...
+</code></pre>
+<h2>what's left</h2>
+<p>First, once again, thank you very much Arthur for teaching me the basics of <strong>GraphQL</strong>!</p>
+<p>Now it is up to the reader to explore the API further... oh wait.. what is the <strong>includeUserRepositories</strong> parameter doing...</p>
+<p>Damn! I missed to include my very own projects! :-)</p>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../blog/pyconweb-2019/">Came for the talks, stayed for the raffles</a></h2>
   
   <p class="meta">
@@ -753,97 +975,6 @@ Type "help", "copyright", "credits" or "license" for more information.
   </div>
 
   
-    
-  <div class="blog-post">
-  
-    <h1><a href="../blog/getting-back-ctrl-over-ctrlaltarrow-keys/">getting back ctrl over ctrl+alt+arrow in gnome</a></h2>
-  
-  <p class="meta">
-    written by
-    
-      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
-    
-    on 2018-07-01
-  </p>
-  <h2>the task</h2>
-<p>Deactivating Gnome's keyboard shortcuts for ctrl+alt+left / ctrl+alt+right to make those combinations available for another application. In my case I tried to use these shortcuts in Jetbrain's PyCharm for code navigation.</p>
-<h2>the obvious (and wrong) way</h2>
-<ul>
-<li>Go to<ul>
-<li><em>Settings</em></li>
-<li><em>Devices</em></li>
-<li><em>Keyboard</em></li>
-<li><em>Keyboard Shortcuts</em></li>
-</ul>
-</li>
-<li>Change or reset the values for the shortcuts</li>
-</ul>
-<p>Although both shortcuts are obviously blocked by Gnome, they are not listed.</p>
-<h2>one way</h2>
-<pre><code>$ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right []
-$ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left []
-</code></pre>
-<h2>another way</h2>
-<pre><code>$ sudo dnf install dconf-editor
-</code></pre>
-<ul>
-<li>open dconf-editor</li>
-<li>navigate to org / gnome / desktop / wm /keybindings</li>
-<li>change the keybindings</li>
-</ul>
-<h2>the explanation</h2>
-<p>I think those missing shortcuts on the settings page is a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1597280">bug</a> (which I reported), or at very least a usability problem. Speaking of usability problems, on the settings page you can only see one shortcut per action, even when there are defined two or more.</p>
-<p>Luckily, as shown above, there are ways to counter those problems.</p>
-<p>In order to save preferences both for the system and for applications, Gnome uses a configuration system called <strong>gconf</strong>. I think of it as simple key-value database.</p>
-<p>There are several ways to access this database, amongst there are:</p>
-<ul>
-<li><strong>gsettings</strong></li>
-<li><strong>dconf-editor</strong> (needs installation)</li>
-</ul>
-<h3>gsettings</h3>
-<p><strong>gsettings</strong> is a high level command line interface to the above mentioned <strong>dconf</strong> configuration system.</p>
-<p>The simplified syntax is:</p>
-<pre><code>$ gsettings COMMAND SCHEMA KEY [VALUE]
-</code></pre>
-<p>Let's have another look at one of the commands from above:</p>
-<pre><code>$ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right []
-</code></pre>
-<ul>
-<li><strong>set</strong> is the COMMAND; another command would be <strong>get</strong> to retrieve a value</li>
-<li><strong>org.gnome.desktop.wm.keybindings</strong> is the SCHEMA, think of a group or a box in order to make it easier to find many key/value pairs</li>
-<li><strong>switch-to-workspace-right</strong> is the KEY, in this case the action which follows a specific keystroke</li>
-<li><strong>[]</strong> is the value; in this case it is set to an empty value</li>
-</ul>
-<p>You can explore the many possibilities of <strong>gsettings</strong> by either having a look at the manpage or by entering one of the following - I think - self explaining commands:</p>
-<pre><code>$ gsettings list-keys org.gnome.desktop.wm.keybindings
-$ gsettings list-schemas
-</code></pre>
-<h3>dconf-editor</h3>
-<p><strong>dconf-editor</strong> is a graphical user interface to the <strong>dconf</strong> database.</p>
-<p>It is not installed by default, so in order to use it, you have to type...</p>
-<pre><code>$ sudo dnf install dconf-editor
-</code></pre>
-<p>There is not much to add here - you can set and get all the key/value pairs just as with <strong>gsettings</strong>, but this time there is no command line involved.</p>
-<h2>pitfalls</h2>
-<p>All settings are saved on a per user basis - so do not use <strong>gsetttings</strong> or <strong>dconf-editor</strong> as root, when you plan to change your user settings.</p>
-<h2>used versions</h2>
-<pre><code>$ gnome-shell --version
-GNOME Shell 3.28.2
-
-$ cat /etc/fedora-release 
-Fedora release 28 (Twenty Eight)
-</code></pre>
-<h2>references</h2>
-<ul>
-<li><a href="https://wiki.ubuntuusers.de/GNOME_Konfiguration/dconf/">ubuntuusers.de - dconf</a> (German)</li>
-<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/desktop_migration_and_administration_guide/user-and-system-settings">chapter 9 of Redhat's Desktop Migration and Administration Guide</a></li>
-<li><a href="https://askubuntu.com/questions/22313/what-is-dconf-what-is-its-function-and-how-do-i-use-it">What is dconf, what is its function, and how do I use it?</a>
-<a href="https://askubuntu.com/questions/22313/what-is-dconf-what-is-its-function-and-how-do-i-use-it">https://askubuntu.com/questions/22313/what-is-dconf-what-is-its-function-and-how-do-i-use-it</a></li>
-</ul>
-
-  </div>
-
-  
 
   
   <div class="pagination">
@@ -852,7 +983,7 @@ Fedora release 28 (Twenty Eight)
     
     | 1 |
     
-      <span class="disabled">Next &raquo;</span>
+      <a href="../blog/page/2/">Next &raquo;</a>
     
   </div>
 

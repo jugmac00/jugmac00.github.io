@@ -1,0 +1,131 @@
+<!doctype html>
+<head>
+<meta name="google-site-verification" content="txmqQrMWeC-Q8aYQOBrl04hiVU-3jBbfBsj5vK3OWSE" />
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../static/style.css">
+<title>Blog — Jürgen Gmach</title>
+</head>
+<body>
+  <header>
+    <h1>Jürgen Gmach</h1>
+    <nav>
+      <ul class="nav navbar-nav">
+        <li><a href="../../../">About me</a></li>
+        
+          <li class="active"><a href="../../../blog/">Blog</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+  <div class="page">
+    
+  
+    
+  <div class="blog-post">
+  
+    <h1><a href="../../../blog/getting-back-ctrl-over-ctrlaltarrow-keys/">getting back ctrl over ctrl+alt+arrow in gnome</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2018-07-01
+  </p>
+  <h2>the task</h2>
+<p>Deactivating Gnome's keyboard shortcuts for ctrl+alt+left / ctrl+alt+right to make those combinations available for another application. In my case I tried to use these shortcuts in Jetbrain's PyCharm for code navigation.</p>
+<h2>the obvious (and wrong) way</h2>
+<ul>
+<li>Go to<ul>
+<li><em>Settings</em></li>
+<li><em>Devices</em></li>
+<li><em>Keyboard</em></li>
+<li><em>Keyboard Shortcuts</em></li>
+</ul>
+</li>
+<li>Change or reset the values for the shortcuts</li>
+</ul>
+<p>Although both shortcuts are obviously blocked by Gnome, they are not listed.</p>
+<h2>one way</h2>
+<pre><code>$ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right []
+$ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left []
+</code></pre>
+<h2>another way</h2>
+<pre><code>$ sudo dnf install dconf-editor
+</code></pre>
+<ul>
+<li>open dconf-editor</li>
+<li>navigate to org / gnome / desktop / wm /keybindings</li>
+<li>change the keybindings</li>
+</ul>
+<h2>the explanation</h2>
+<p>I think those missing shortcuts on the settings page is a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1597280">bug</a> (which I reported), or at very least a usability problem. Speaking of usability problems, on the settings page you can only see one shortcut per action, even when there are defined two or more.</p>
+<p>Luckily, as shown above, there are ways to counter those problems.</p>
+<p>In order to save preferences both for the system and for applications, Gnome uses a configuration system called <strong>gconf</strong>. I think of it as simple key-value database.</p>
+<p>There are several ways to access this database, amongst there are:</p>
+<ul>
+<li><strong>gsettings</strong></li>
+<li><strong>dconf-editor</strong> (needs installation)</li>
+</ul>
+<h3>gsettings</h3>
+<p><strong>gsettings</strong> is a high level command line interface to the above mentioned <strong>dconf</strong> configuration system.</p>
+<p>The simplified syntax is:</p>
+<pre><code>$ gsettings COMMAND SCHEMA KEY [VALUE]
+</code></pre>
+<p>Let's have another look at one of the commands from above:</p>
+<pre><code>$ gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right []
+</code></pre>
+<ul>
+<li><strong>set</strong> is the COMMAND; another command would be <strong>get</strong> to retrieve a value</li>
+<li><strong>org.gnome.desktop.wm.keybindings</strong> is the SCHEMA, think of a group or a box in order to make it easier to find many key/value pairs</li>
+<li><strong>switch-to-workspace-right</strong> is the KEY, in this case the action which follows a specific keystroke</li>
+<li><strong>[]</strong> is the value; in this case it is set to an empty value</li>
+</ul>
+<p>You can explore the many possibilities of <strong>gsettings</strong> by either having a look at the manpage or by entering one of the following - I think - self explaining commands:</p>
+<pre><code>$ gsettings list-keys org.gnome.desktop.wm.keybindings
+$ gsettings list-schemas
+</code></pre>
+<h3>dconf-editor</h3>
+<p><strong>dconf-editor</strong> is a graphical user interface to the <strong>dconf</strong> database.</p>
+<p>It is not installed by default, so in order to use it, you have to type...</p>
+<pre><code>$ sudo dnf install dconf-editor
+</code></pre>
+<p>There is not much to add here - you can set and get all the key/value pairs just as with <strong>gsettings</strong>, but this time there is no command line involved.</p>
+<h2>pitfalls</h2>
+<p>All settings are saved on a per user basis - so do not use <strong>gsetttings</strong> or <strong>dconf-editor</strong> as root, when you plan to change your user settings.</p>
+<h2>used versions</h2>
+<pre><code>$ gnome-shell --version
+GNOME Shell 3.28.2
+
+$ cat /etc/fedora-release 
+Fedora release 28 (Twenty Eight)
+</code></pre>
+<h2>references</h2>
+<ul>
+<li><a href="https://wiki.ubuntuusers.de/GNOME_Konfiguration/dconf/">ubuntuusers.de - dconf</a> (German)</li>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/desktop_migration_and_administration_guide/user-and-system-settings">chapter 9 of Redhat's Desktop Migration and Administration Guide</a></li>
+<li><a href="https://askubuntu.com/questions/22313/what-is-dconf-what-is-its-function-and-how-do-i-use-it">What is dconf, what is its function, and how do I use it?</a>
+<a href="https://askubuntu.com/questions/22313/what-is-dconf-what-is-its-function-and-how-do-i-use-it">https://askubuntu.com/questions/22313/what-is-dconf-what-is-its-function-and-how-do-i-use-it</a></li>
+</ul>
+
+  </div>
+
+  
+
+  
+  <div class="pagination">
+    
+      <a href="../../../blog/">&laquo; Previous</a>
+    
+    | 2 |
+    
+      <span class="disabled">Next &raquo;</span>
+    
+  </div>
+
+
+  </div>
+  <footer>
+    &copy; Copyright 2018 - 2019 by Jürgen Gmach.
+  </footer>
+</body>
