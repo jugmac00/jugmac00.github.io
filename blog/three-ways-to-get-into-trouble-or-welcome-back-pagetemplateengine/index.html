@@ -1,0 +1,79 @@
+<!doctype html>
+<head>
+<meta name="google-site-verification" content="txmqQrMWeC-Q8aYQOBrl04hiVU-3jBbfBsj5vK3OWSE" />
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../static/style.css">
+<title>Three ways to get into trouble or welcome back PageTemplateEngine — Jürgen Gmach</title>
+</head>
+<body>
+  <header>
+    <h1>Jürgen Gmach</h1>
+    <nav>
+      <ul class="nav navbar-nav">
+        <li><a href="../../">About me</a></li>
+        
+          <li class="active"><a href="../../blog/">Blog</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+  <div class="page">
+    
+  
+  <div class="blog-post">
+  
+    <h1>Three ways to get into trouble or welcome back PageTemplateEngine</h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2019-11-26
+  </p>
+  <p>The web application server <a href="https://en.wikipedia.org/wiki/Zope">Zope</a> has a very long history which dates back to the late '90s.</p>
+<p>Quoting <a href="https://twitter.com/faassen/status/1197219574711803905">Martijn Faassen</a>:</p>
+<blockquote><p>Zope must be one of the oldest Python codebases in the world that is still used outside the standard library.</p>
+</blockquote>
+<p>During its many years of existence the way a view gets rendered has changed.</p>
+<p>Basically there are two supported template mechanisms:</p>
+<ul>
+<li>Document Template Markup Language (DTML)</li>
+<li>Zope Page Templates (ZPT)</li>
+</ul>
+<p>DTML is pretty much outdated for more than a decade, but still in use for the Zope Management Interface.</p>
+<p>ZPTs are basically XML/HTML pages in which special markup is embedded (<a href="https://en.wikipedia.org/wiki/Template_Attribute_Language">TAL</a>), which gets processed server side.</p>
+<p>The processing is done by a template engine - this used to be the PageTemplateEngine.</p>
+<p>With the release of Zope 4 this engine has been superseded by the <a href="https://github.com/malthe/chameleon">Chameleon</a> template engine, which is now activated per default.</p>
+<p>While Chameleon offers more flexibility and better performance, there may be reasons(TM) for using the old template engine.</p>
+<h2>word of caution</h2>
+<p>As of using Zope 4.1, the old PageTemplateEngine currently works, but is deprecated and subject to be <a href="https://github.com/zopefoundation/Zope/issues/104">removed anytime</a>.</p>
+<h2>activate pageTemplateEngine</h2>
+<p>True to the Python motto <strong>"There should be one—and preferably only one—obvious way to do it."</strong> there is no obvious,  but three rather obscure ways to get back the old engine - at least for the ZCML apprentice. <a href="https://docs.plone.org/develop/addons/components/zcml.html">ZCML</a> stands for Zope Configuration Mark-up Language.</p>
+<p>ZCML was introduced with Zope 3, and is used to wire together different parts of your application.</p>
+<h3>one</h3>
+<p>Go to <code>src/Products/PageTemplates/configure.zcml</code> and comment out the configuration.</p>
+<p>This can only be a temporary solution, as you should not modify an upstream package, e.g. Zope.</p>
+<h3>two</h3>
+<p>Make use of <a href="https://pypi.org/project/z3c.unconfigure/">z3c.unconfigure</a> and unconfigure the registration.</p>
+<h3>three</h3>
+<p>Create an <code>overrides.zcml</code> with the following content:</p>
+<pre><code>&lt;configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/zcml"&gt;
+
+  &lt;!-- This registration disables Chameleon templates on Zope 4. --&gt;
+  &lt;utility
+    zcml:condition="installed chameleon"
+    component="zope.pagetemplate.pagetemplate.PageTemplateEngine" /&gt;
+
+&lt;/configure&gt;
+</code></pre>
+
+  </div>
+
+
+  </div>
+  <footer>
+    &copy; Copyright 2018 - 2019 by Jürgen Gmach.
+  </footer>
+</body>

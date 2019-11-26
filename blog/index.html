@@ -23,6 +23,59 @@
     
   <div class="blog-post">
   
+    <h1><a href="../blog/three-ways-to-get-into-trouble-or-welcome-back-pagetemplateengine/">Three ways to get into trouble or welcome back PageTemplateEngine</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2019-11-26
+  </p>
+  <p>The web application server <a href="https://en.wikipedia.org/wiki/Zope">Zope</a> has a very long history which dates back to the late '90s.</p>
+<p>Quoting <a href="https://twitter.com/faassen/status/1197219574711803905">Martijn Faassen</a>:</p>
+<blockquote><p>Zope must be one of the oldest Python codebases in the world that is still used outside the standard library.</p>
+</blockquote>
+<p>During its many years of existence the way a view gets rendered has changed.</p>
+<p>Basically there are two supported template mechanisms:</p>
+<ul>
+<li>Document Template Markup Language (DTML)</li>
+<li>Zope Page Templates (ZPT)</li>
+</ul>
+<p>DTML is pretty much outdated for more than a decade, but still in use for the Zope Management Interface.</p>
+<p>ZPTs are basically XML/HTML pages in which special markup is embedded (<a href="https://en.wikipedia.org/wiki/Template_Attribute_Language">TAL</a>), which gets processed server side.</p>
+<p>The processing is done by a template engine - this used to be the PageTemplateEngine.</p>
+<p>With the release of Zope 4 this engine has been superseded by the <a href="https://github.com/malthe/chameleon">Chameleon</a> template engine, which is now activated per default.</p>
+<p>While Chameleon offers more flexibility and better performance, there may be reasons(TM) for using the old template engine.</p>
+<h2>word of caution</h2>
+<p>As of using Zope 4.1, the old PageTemplateEngine currently works, but is deprecated and subject to be <a href="https://github.com/zopefoundation/Zope/issues/104">removed anytime</a>.</p>
+<h2>activate pageTemplateEngine</h2>
+<p>True to the Python motto <strong>"There should be one—and preferably only one—obvious way to do it."</strong> there is no obvious,  but three rather obscure ways to get back the old engine - at least for the ZCML apprentice. <a href="https://docs.plone.org/develop/addons/components/zcml.html">ZCML</a> stands for Zope Configuration Mark-up Language.</p>
+<p>ZCML was introduced with Zope 3, and is used to wire together different parts of your application.</p>
+<h3>one</h3>
+<p>Go to <code>src/Products/PageTemplates/configure.zcml</code> and comment out the configuration.</p>
+<p>This can only be a temporary solution, as you should not modify an upstream package, e.g. Zope.</p>
+<h3>two</h3>
+<p>Make use of <a href="https://pypi.org/project/z3c.unconfigure/">z3c.unconfigure</a> and unconfigure the registration.</p>
+<h3>three</h3>
+<p>Create an <code>overrides.zcml</code> with the following content:</p>
+<pre><code>&lt;configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/zcml"&gt;
+
+  &lt;!-- This registration disables Chameleon templates on Zope 4. --&gt;
+  &lt;utility
+    zcml:condition="installed chameleon"
+    component="zope.pagetemplate.pagetemplate.PageTemplateEngine" /&gt;
+
+&lt;/configure&gt;
+</code></pre>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../blog/am-i-famous/">Am I famous?</a></h2>
   
   <p class="meta">
@@ -818,7 +871,7 @@ $ rm -rf google-chrome
 </code></pre>
 <p>where...</p>
 <ul>
-<li>the <em>location</em> directvie configures what should happen, depending on the request <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a></li>
+<li>the <em>location</em> directive configures what should happen, depending on the request <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a></li>
 <li><p><em>~</em> means regex is following</p>
 </li>
 <li><p><em>apple-touch-icon(|-\d+x\d+)(|-precomposed).png</em> should match any and more of the following:</p>
@@ -847,136 +900,6 @@ apple-touch-icon-180x180.png
 <li><a href="https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms">Configuring nginx @Digital Ocean</a></li>
 <li><a href="https://realfavicongenerator.net/faq#.W1rgidIzZaQ">FAQ @Favicon Generator. For real.</a></li>
 </ul>
-
-  </div>
-
-  
-    
-  <div class="blog-post">
-  
-    <h1><a href="../blog/sudo-dnf-install-beautiful-problems/">sudo dnf install beautiful-problems</a></h2>
-  
-  <p class="meta">
-    written by
-    
-      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
-    
-    on 2018-07-04
-  </p>
-  <p>There is something I immediately disliked when using Fedora the first time - the Bash prompt.</p>
-<p>For many years I've been using a fixed prompt at work for all my machines, a beauty in green and yellow...</p>
-<p>And when I first started Bash after installing Fedora on my home laptop, I encountered this grey monotony...</p>
-<pre><code>[jugmac00@localhost ~]$
-</code></pre>
-<p>I did not try to recreate the prompt I have at work, but I wanted to try something new - and <em>oh my zsh</em>, ah, <em>oh my god</em>,  <strong>zsh</strong> did not come to my mind - yuck!</p>
-<h2>the good (looking prompt and statusline)</h2>
-<p>Instead, while googling for resources about Fedora, I stumbled upon <a href="https://fedoramagazine.org/add-power-terminal-powerline/">Add power to your terminal with powerline</a> published on <a href="https://fedoramagazine.org/">https://fedoramagazine.org/</a>.</p>
-<p>From <strong>Powerline's</strong> <a href="https://github.com/powerline/powerline">GitHub page</a>:</p>
-<blockquote><p>Powerline is a statusline plugin for vim, and provides statuslines and prompts for several other applications, including zsh, bash, fish, tmux, IPython, Awesome, i3 and Qtile.</p>
-</blockquote>
-<p>The article is written very well, and easy to follow. A few minutes later, installing a few packages here, adding some lines to <em>.bashrc</em> and <em>.vim.rc</em> there, both <strong>Bash</strong> and <strong>Vim</strong> looked great!</p>
-<h3>bash</h3>
-<p><img src="../blog/sudo-dnf-install-beautiful-problems/powerline-bash.png" alt="Alt-Text"></p>
-<h3>vim</h3>
-<p><img src="../blog/sudo-dnf-install-beautiful-problems/powerline-vim.png" alt="Alt-Text"></p>
-<h2>the bad (experience)</h2>
-<p>The wow-effect lasted only a couple of minutes, until I tried to work on a Python project.</p>
-<p>When you work on a Python project, it's an hell of an idea to use <strong>virtualenv</strong> instead of installing dependencies system wide.</p>
-<p>From <strong>virtualenv's</strong> <a href="https://virtualenv.pypa.io/en/stable/">documentation page</a>:</p>
-<blockquote><p>virtualenv is a tool to create isolated Python environments.</p>
-</blockquote>
-<p>So in order to not mess up with Python based Linux applications - such as <strong>Powerline</strong> - I activated the virtualenv for my project, started <strong>Vim</strong>... and it made booooom!</p>
-<pre><code>Error detected while processing /home/jugmac00/.vimrc:
-line   36:
-Traceback (most recent call last):
-  File "&lt;string&gt;", line 1, in &lt;module&gt;
-ModuleNotFoundError: No module named 'powerline'
-line   37:
-Traceback (most recent call last):
-  File "&lt;string&gt;", line 1, in &lt;module&gt;
-NameError: name 'powerline_setup' is not defined
-line   38:
-Traceback (most recent call last):
-  File "&lt;string&gt;", line 1, in &lt;module&gt;
-NameError: name 'powerline_setup' is not defined
-Traceback (most recent call last):
-  File "&lt;string&gt;", line 4, in &lt;module&gt;
-ModuleNotFoundError: No module named 'powerline'
-During handling of the above exception, another exception occurred:
-Traceback (most recent call last):
-  File "&lt;string&gt;", line 9, in &lt;module&gt;
-ModuleNotFoundError: No module named 'powerline'
-An error occurred while importing powerline module.
-This could be caused by invalid sys.path setting,
-or by an incompatible Python version (powerline requires
-Python 2.6, 2.7 or 3.2 and later to work). Please consult
-the troubleshooting section in the documentation for
-possible solutions.
-Unable to import powerline, is it installed?
-Press ENTER or type command to continue
-</code></pre>
-<p>As a Python developer I am used to see tracebacks, so I was not scared away immediately, and this traceback was even a very informative one:</p>
-<pre><code>ModuleNotFoundError: No module named 'powerline'
-</code></pre>
-<p>In order to verify the <em>missing</em> package, I left <strong>Vim</strong> and started a Python interpreter and tried to import the <strong>Powerline</strong> package manually...</p>
-<ul>
-<li>one time without activated <strong>virtualenv</strong><pre><code>jugmac00 ~&gt; python3.6
-Python 3.6.5 (default, Mar 29 2018, 18:20:46) 
-[GCC 8.0.1 20180317 (Red Hat 8.0.1-0.19)] on linux
-Type "help", "copyright", "credits" or "license" for more information.
-&gt;&gt;&gt; import powerline
-&gt;&gt;&gt;
-</code></pre>
-</li>
-<li>the other with activated <strong>virtualenv</strong><pre><code>jugmac00 ~&gt; python3.6
-Python 3.6.5 (default, Mar 29 2018, 18:20:46) 
-[GCC 8.0.1 20180317 (Red Hat 8.0.1-0.19)] on linux
-Type "help", "copyright", "credits" or "license" for more information.
-&gt;&gt;&gt; import powerline
-Traceback (most recent call last):
-File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-ModuleNotFoundError: No module named 'powerline'
-&gt;&gt;&gt;
-</code></pre>
-</li>
-</ul>
-<p>Here we go! Having a look at the longish traceback from above again, I also spotted the exact location of the problem, the import statement in <em>.vimrc</em>.</p>
-<pre><code>python3 from powerline.vim import setup as powerline_setup
-python3 powerline_setup()
-python3 del powerline_setup
-</code></pre>
-<p>There are <em>only</em> two Python 3 interpreters on my system (that I know of)</p>
-<ul>
-<li>the standard one</li>
-<li>the one in my project's virtualenv</li>
-</ul>
-<p>So obviously, <strong>Vim</strong> is using my project's environment - instead of the system one!</p>
-<h2>the ugly (hack)</h2>
-<p>Two possible solutions came to my mind:</p>
-<ul>
-<li>installing powerline into my virtualenv (<em>oh my zsh</em>, ah, <em>oh my god</em> - how could I even think of it? :-))</li>
-<li>manipulating the Python path</li>
-</ul>
-<p>As the few lines of code from above suggest, it seems to be possible to write ordinary Python code within <em>.vimrc</em>.</p>
-<p>But where is <strong>Powerline's</strong> Python package?</p>
-<p>Say <em>hello</em> to Python's ability for introspection...</p>
-<pre><code>jugmac00 ~&gt; python3
-Python 3.6.5 (default, Mar 29 2018, 18:20:46) 
-[GCC 8.0.1 20180317 (Red Hat 8.0.1-0.19)] on linux
-Type "help", "copyright", "credits" or "license" for more information.
-&gt;&gt;&gt; import powerline
-&gt;&gt;&gt; powerline.__path__
-['/usr/lib/python3.6/site-packages/powerline']
-</code></pre>
-<p>So I just had to add the following line to <em>.vimrc</em>:</p>
-<pre><code>python3 import sys;sys.path.append("/usr/lib/python3.6/site-packages/")
-</code></pre>
-<p>And here we go, <strong>Powerline</strong> and <strong>Vim</strong>, united once again - and this time, even when using an activated <strong>virtualenv</strong>.</p>
-<h3>drawback</h3>
-<p>Adding system-wide site-packages could have some unforseen side effects, but at least it only effects <strong>Vim</strong>, and not my project. And, well... yolo :-)</p>
-<h3>bug report</h3>
-<p>Googling for the error message did not reveal much more information about this problem. But at least I found a <a href="https://github.com/powerline/powerline/issues/1908">bug report</a> at <strong>Powerline's</strong> issue tracker - yet without an answer.</p>
-<p>Lately, <strong>Powerline's</strong> development seems to be not that active anyway, and to be honest, I am not sure, whether this is a <strong>Powerline</strong> or maybe even a <strong>Vim</strong> bug.</p>
 
   </div>
 
