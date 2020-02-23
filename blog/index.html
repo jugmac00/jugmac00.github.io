@@ -23,6 +23,95 @@
     
   <div class="blog-post">
   
+    <h1><a href="../blog/isort-and-pre-commit-a-friendship-with-obstacles/">isort and pre-commit - a friendship with obstacles</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2020-02-23
+  </p>
+  <blockquote><p><strong><em>NOTE:</em></strong> 
+This post is not intended to be an exhaustive introduction to <code>pre-commit</code> and its hooks. Please visit <a href="https://pre-commit.com/">pre-commit.com</a> for a complete documentation.</p>
+</blockquote>
+<p>In a nutshell...</p>
+<h2>pre-commit</h2>
+<p>From its <a href="https://pre-commit.com/">website</a>:</p>
+<blockquote><p>A framework for managing and maintaining multi-language pre-commit hooks.</p>
+</blockquote>
+<p>Very simplified this means, whenever you try to commit changes in your project (e.g. entering <code>git commit</code>), <code>pre-commit</code> runs all configured tools (e.g. linter, formatter, ...), and only if they run successfully, your commit will be executed - otherwise your commit will fail.</p>
+<p>This is really great, as you will never ever forget to run your linter or other tools.</p>
+<h2>isort</h2>
+<p>One of those tools, which pre-commit can execute for you, is <code>isort</code> - short for "sort imports".</p>
+<p>As the name suggests, this little helper sorts your import statements, both alphabetical and also PEP 8 compliant, means e.g. standard library imports are separated from the ones of third party tools. And I like this a lot!</p>
+<p>A sample configuration for <code>pre-commit</code> to use <code>isort</code> could look like this - by the way, this is YAML:</p>
+<pre><code>-   repo: https://github.com/timothycrosley/isort
+    rev: 4.3.21
+    hooks:
+    -   id: isort
+</code></pre>
+<p>Also, you can customize <code>isort</code> to our liking, ie. every import on one line. This is just one of many configuration options.</p>
+<p>And with the configuration options there comes the first problem.</p>
+<h2>don't touch my migrations</h2>
+<p>Whenever you run an application with a relational database, you probably also need to keep track of <code>migrations</code>, which usually consists of files with the diffs between two database schemes.</p>
+<p>For my Flask app, those are stored in a subfolder called <code>migrations</code>.</p>
+<p>No problem at all! Let's use <code>isort's</code> <code>skip</code> / <code>skip-glob</code> option (see  <code>isort's</code> <a href="https://github.com/timothycrosley/isort/wiki/isort-Settings">wiki</a>.</p>
+<p>Looks easy enough.</p>
+<p>After some <a href="https://github.com/timothycrosley/isort/issues/282">googling</a> - my first try would be something like this:</p>
+<pre><code>[isort]
+skip = migrations
+</code></pre>
+<p>Does not work. Hm, maybe I need to use globbing (wildcards)?</p>
+<blockquote><p><strong><em>NOTE:</em></strong> 
+I put <code>isort</code>'s configuration into my <code>tox.ini</code> file - you can certainly also use a dedicated <code>.isort.cfg</code> file. You'd have to replace the section <code>isort</code> with <code>settings</code> then.</p>
+</blockquote>
+<p>After some more googling I came up with this:</p>
+<pre><code>[isort]
+skip_glob = */migrations/*.py
+</code></pre>
+<p>Guess what? This also does not work. All my migration files still get changed by <code>isort</code>.</p>
+<p>After some more investigation, I found  <a href="https://github.com/timothycrosley/isort/issues/885">https://github.com/timothycrosley/isort/issues/885</a>:</p>
+<p>There is a new "never skip when passed a filename" behavior - which is... new. So, even if you put a file or a pattern into a <code>skip</code> option, it does not get skipped when passed to <code>isort</code> directly. And this is what I assume <code>pre-commit</code> is doing.</p>
+<p>Ok, in the same issue a workaround was mentioned:
+Use <code>--filter-files</code> on the command line, which I do not use, as I use <code>pre-commit</code>, but fortunately you can add it to your <code>pre-commit</code> hook configuration:</p>
+<pre><code>  - repo: https://github.com/timothycrosley/isort
+    rev: 4.3.21
+    hooks:
+    - id: isort
+      args: [--filter-files]
+</code></pre>
+<p>It works!</p>
+<blockquote><p><strong><em>NOTE:</em></strong> 
+As an <a href="https://www.gitmemory.com/issue/pre-commit/mirrors-isort/9/511434587">alternative</a>, you could also add an <code>exclude: migrations/</code> statement in your pre-commit-config.yaml.</p>
+</blockquote>
+<p>Let me rather say... it worked, until I updated from <code>4.3.21</code> to <code>4.3.21-2</code> - there are no changelog entries available for this update, but there were tons of changes, including different behavior which files should be scanned.</p>
+<p>With this update, all files gets processed by <code>isort</code>, including <code>.po</code>, <code>.rst</code>, <code>.json</code> and many more.</p>
+<p>Ok, what can we do about it?</p>
+<p>First, file an issue (<a href="https://github.com/timothycrosley/isort/issues/1154">https://github.com/timothycrosley/isort/issues/1154</a>).</p>
+<p>Reading the excellent <code>pre-commit</code> documentation, it seems there are several options, but <a href="https://pre-commit.com/#creating-new-hooks"><code>filter by files</code></a> looks very promising.</p>
+<p>The <code>files</code> statement supports regular expressions, so the new hook looks like this:</p>
+<pre><code>  - repo: https://github.com/timothycrosley/isort
+    rev: 4.3.21-2
+    hooks:
+    - id: isort
+      args: [--filter-files]
+      files: \.py$
+</code></pre>
+<p>And here we go... finally works as intended.</p>
+<h2>post scriptum</h2>
+<p>How does <code>isort</code> know how to sort the imports?</p>
+<p>I don' t know, but it looks like Anthony Sottile knows a thing or two about this, and so he even wrote a tool which pre-polulates <code>isort's</code> <code>known_third_party</code> configuration, and thus makes <code>isort</code> even work better.</p>
+<p>For more information and the <code>pre-commit</code> configuration please refer to <a href="https://github.com/asottile/seed-isort-config">https://github.com/asottile/seed-isort-config</a>.</p>
+<h2>Update</h2>
+<p>I could track down the the faulty behavior (<code>isort</code> also touches files which are not Python files) to a regression/packaging bug - <code>.pre-commit-hook.yaml</code> is broken for 4.3.21-2 - see the issue at <code>isort</code>'s <a href="https://github.com/timothycrosley/isort/issues/1154#issuecomment-587517806">bug tracker</a>.</p>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../blog/three-ways-to-get-into-trouble-or-welcome-back-pagetemplateengine/">Three ways to get into trouble or welcome back PageTemplateEngine</a></h2>
   
   <p class="meta">
@@ -843,74 +932,6 @@ $ rm -rf google-chrome
   </div>
 
   
-    
-  <div class="blog-post">
-  
-    <h1><a href="../blog/ignore-requests-for-apple-touch-icons/">ignore requests for apple touch icons</a></h2>
-  
-  <p class="meta">
-    written by
-    
-      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
-    
-    on 2018-07-28
-  </p>
-  <h2>the problem</h2>
-<p>My applications error log is polluted with tracebacks of <em>notFoundErrors</em> from Apple browsers requesting <em>apple-touch-icon.png</em>s.</p>
-<p>For those, who do not know... Touch icons are to Apple's mobile devices what <a href="https://en.wikipedia.org/wiki/Favicon">favicons</a> are to (desktop) web browsers.</p>
-<p>According to <a href="https://www.computerhope.com/jargon/a/appletou.htm">ComputerHope</a>:</p>
-<blockquote><p>When someone bookmarks your web page or adds your web page to their home screen, this icon is used.</p>
-</blockquote>
-<p>So, when you run a public website, no question, you want to put <em>some effort</em> into making some great icons, so your website looks great on your users' home screen and bookmark section.</p>
-<p>And by <em>some effort</em> I mean quite some. I was not able to quickly find out how many icons one has to create currently - for all different screens sizes and resolutions.</p>
-<p>If you have to take care of touch icons, try Apple's <a href="https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html">Configuring Web Applications</a> as a starting point.</p>
-<h2>initial situation</h2>
-<p>I do not run a public website, but an internal application with a two digit user number.</p>
-<p>When one of my colleagues accesses the application with an Apple device, and does "things", nginx, configured as reverse proxy, passes the request for the touch icon to the application server, and it makes boom!</p>
-<p>Well, the home screen will be full - at some time, but I guess quite some bookmarks are made, and thus my application's error log gets spammed with messages I do not care about - at least for the moment, but of course, I do not want to see them.</p>
-<h2>technical solution &gt;&gt; design solution</h2>
-<p>The easiest way to get rid of those messages, is NOT to create estimated <strong>18</strong> (update: <strong>40</strong>) differently named and sized touch icons, but not to pass those requests to the application server.</p>
-<p>nginx makes this easy, as all I needed to add to the configuration was:</p>
-<pre><code>location ~ /apple-touch-icon(|-\d+x\d+)(|-precomposed).png {
-    return 404;
-    log_not_found off;
-}
-</code></pre>
-<p>where...</p>
-<ul>
-<li>the <em>location</em> directive configures what should happen, depending on the request <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a></li>
-<li><p><em>~</em> means regex is following</p>
-</li>
-<li><p><em>apple-touch-icon(|-\d+x\d+)(|-precomposed).png</em> should match any and more of the following:</p>
-</li>
-</ul>
-<pre><code>apple-touch-icon.png
-apple-touch-icon-precomposed.png
-apple-touch-icon-74x74.png
-apple-touch-icon-180x180.png
-</code></pre>
-<ul>
-<li><em>return 404</em> sends "page not found" to the user</li>
-<li><em>log_not_found off</em> makes nginx to not log this "error"</li>
-</ul>
-<p>Fair enough?</p>
-<h2>bonus</h2>
-<p>Want to be prepared for the glorious time when you introduce touch icons?</p>
-<p>Dig into nginx' <a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#try_files">try_files directive</a> , so nginx looks for a file and delivers it, and if it's not there, you can return a 404 (and not pass the request to your application server).</p>
-<p>Following (untested) configuration snippet should do the trick:</p>
-<pre><code>location ~ /apple-touch-icon(|-\d+x\d+)(|-precomposed).png {
-    try_files $uri =404;
-}
-</code></pre>
-<h2>further resources</h2>
-<ul>
-<li><a href="https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms">Configuring nginx @Digital Ocean</a></li>
-<li><a href="https://realfavicongenerator.net/faq#.W1rgidIzZaQ">FAQ @Favicon Generator. For real.</a></li>
-</ul>
-
-  </div>
-
-  
 
   
   <div class="pagination">
@@ -926,6 +947,6 @@ apple-touch-icon-180x180.png
 
   </div>
   <footer>
-    &copy; Copyright 2018 - 2019 by Jürgen Gmach.
+    &copy; Copyright 2018 - 2020 by Jürgen Gmach.
   </footer>
 </body>

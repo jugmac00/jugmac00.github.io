@@ -23,6 +23,74 @@
     
   <div class="blog-post">
   
+    <h1><a href="../../../blog/ignore-requests-for-apple-touch-icons/">ignore requests for apple touch icons</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2018-07-28
+  </p>
+  <h2>the problem</h2>
+<p>My applications error log is polluted with tracebacks of <em>notFoundErrors</em> from Apple browsers requesting <em>apple-touch-icon.png</em>s.</p>
+<p>For those, who do not know... Touch icons are to Apple's mobile devices what <a href="https://en.wikipedia.org/wiki/Favicon">favicons</a> are to (desktop) web browsers.</p>
+<p>According to <a href="https://www.computerhope.com/jargon/a/appletou.htm">ComputerHope</a>:</p>
+<blockquote><p>When someone bookmarks your web page or adds your web page to their home screen, this icon is used.</p>
+</blockquote>
+<p>So, when you run a public website, no question, you want to put <em>some effort</em> into making some great icons, so your website looks great on your users' home screen and bookmark section.</p>
+<p>And by <em>some effort</em> I mean quite some. I was not able to quickly find out how many icons one has to create currently - for all different screens sizes and resolutions.</p>
+<p>If you have to take care of touch icons, try Apple's <a href="https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html">Configuring Web Applications</a> as a starting point.</p>
+<h2>initial situation</h2>
+<p>I do not run a public website, but an internal application with a two digit user number.</p>
+<p>When one of my colleagues accesses the application with an Apple device, and does "things", nginx, configured as reverse proxy, passes the request for the touch icon to the application server, and it makes boom!</p>
+<p>Well, the home screen will be full - at some time, but I guess quite some bookmarks are made, and thus my application's error log gets spammed with messages I do not care about - at least for the moment, but of course, I do not want to see them.</p>
+<h2>technical solution &gt;&gt; design solution</h2>
+<p>The easiest way to get rid of those messages, is NOT to create estimated <strong>18</strong> (update: <strong>40</strong>) differently named and sized touch icons, but not to pass those requests to the application server.</p>
+<p>nginx makes this easy, as all I needed to add to the configuration was:</p>
+<pre><code>location ~ /apple-touch-icon(|-\d+x\d+)(|-precomposed).png {
+    return 404;
+    log_not_found off;
+}
+</code></pre>
+<p>where...</p>
+<ul>
+<li>the <em>location</em> directive configures what should happen, depending on the request <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a></li>
+<li><p><em>~</em> means regex is following</p>
+</li>
+<li><p><em>apple-touch-icon(|-\d+x\d+)(|-precomposed).png</em> should match any and more of the following:</p>
+</li>
+</ul>
+<pre><code>apple-touch-icon.png
+apple-touch-icon-precomposed.png
+apple-touch-icon-74x74.png
+apple-touch-icon-180x180.png
+</code></pre>
+<ul>
+<li><em>return 404</em> sends "page not found" to the user</li>
+<li><em>log_not_found off</em> makes nginx to not log this "error"</li>
+</ul>
+<p>Fair enough?</p>
+<h2>bonus</h2>
+<p>Want to be prepared for the glorious time when you introduce touch icons?</p>
+<p>Dig into nginx' <a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#try_files">try_files directive</a> , so nginx looks for a file and delivers it, and if it's not there, you can return a 404 (and not pass the request to your application server).</p>
+<p>Following (untested) configuration snippet should do the trick:</p>
+<pre><code>location ~ /apple-touch-icon(|-\d+x\d+)(|-precomposed).png {
+    try_files $uri =404;
+}
+</code></pre>
+<h2>further resources</h2>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms">Configuring nginx @Digital Ocean</a></li>
+<li><a href="https://realfavicongenerator.net/faq#.W1rgidIzZaQ">FAQ @Favicon Generator. For real.</a></li>
+</ul>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../../../blog/sudo-dnf-install-beautiful-problems/">sudo dnf install beautiful-problems</a></h2>
   
   <p class="meta">
@@ -256,6 +324,6 @@ Fedora release 28 (Twenty Eight)
 
   </div>
   <footer>
-    &copy; Copyright 2018 - 2019 by Jürgen Gmach.
+    &copy; Copyright 2018 - 2020 by Jürgen Gmach.
   </footer>
 </body>
