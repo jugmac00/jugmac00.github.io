@@ -23,6 +23,105 @@
     
   <div class="blog-post">
   
+    <h1><a href="../../../blog/it-is-never-too-late-too-join-the-party/">it&#39;s never too late to join the party!</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2019-05-02
+  </p>
+  <p>Although I started writing code already at the age of 13 (<strong>Generation C64</strong>), and I am a professional web and backend developer since 2007, I only started contributing to <strong>open source software</strong> quite recently - apart from the occasional bug report.</p>
+<h2>what is open source software?</h2>
+<p>Quote from <a href="https://en.wikipedia.org/wiki/Open-source_software">Wikipedia</a>:</p>
+<blockquote><p>Open-source software (OSS) is a type of computer software in which source code is released under a license in which the copyright holder grants users the rights to study, change, and distribute the software to anyone and for any purpose.</p>
+</blockquote>
+<h3>interesting tidbit</h3>
+<p>The term was coined by Tim O'Reilly, Eric Raymon and Bruce Perens in <strong>1998</strong> - that's just 20 years!</p>
+<h2>why care about open source software?</h2>
+<p>The company, I currently work for, makes heave use of open source sofware - maybe not right from the beginning, as the company predates the term open source software, but at least from the very start of the <strong>internet-age</strong>.</p>
+<h3>utilized open source software (excerpt)</h3>
+<ul>
+<li>Drupal / WordPress</li>
+<li>Roundcube / Dovecot / Postfix</li>
+<li>Apache / Nginx</li>
+<li>PHP / Python</li>
+<li>Linux!</li>
+<li>and many more...</li>
+</ul>
+<h2>why would you not contribute to open source software?</h2>
+<ul>
+<li>work and family related time constraints</li>
+<li>money - at least at work</li>
+</ul>
+<h2>turning point</h2>
+<ul>
+<li>among others, I am maintaining a 14 year old custom intranet application built on a Zope 2 / Python 2 stack</li>
+<li>Python 2 support ends <a href="https://pythonclock.org/">01. January 2020</a></li>
+<li>that means I have to migrate<ul>
+<li>application server (Zope 2)</li>
+<li>application itself</li>
+<li>database (ZODB =&gt; a NoSQL database before the name was coined)</li>
+</ul>
+</li>
+<li>resources - a team of one -&gt; <strong>mission impossible</strong>!</li>
+</ul>
+<h2>... but ... Zope is open source software!</h2>
+<ul>
+<li>literally: the source code is <strong>open</strong> - available for everybody to read and modify, so no legal restrictions</li>
+<li>but that does not mean there is no business interest/money involved</li>
+</ul>
+<p>Despite its <del>age</del> maturity <strong>Zope</strong> is still widely used, indirectly by the very popular and rock stable CMS <a href="https://plone.org/">Plone</a>, but also for big custom applications, for instance <strong>union.cms</strong>, which gets used by <a href="https://www.verdi.de/">ver.di</a> and <a href="https://de.wikipedia.org/wiki/Deutscher_Gewerkschaftsbund">DGB</a>.</p>
+<p>That means that there is a broad interest of companies and unions alike to keep Zope going.</p>
+<p>Focussing on the core competence, it is not always the best idea to employ software engineers yourself - at least not to build on the basis technology.</p>
+<p>Luckily, there are quite some consultants out there working with the Zope / Plone universe, e.g. <a href="https://gocept.com/"><strong>gocept gmbh &amp; co. kg</strong></a>, which get hired by companies and the mentioned unions, in order to work on Zope. <strong>gocept</strong> on the other hand also has great interest in <strong>Zope's</strong> future, and therefore also heavily contributes back to the <strong>Zope</strong> universe, both with code contributions, but they also host so called <strong>sprints</strong>.</p>
+<p>Sounds like a win win win situation!</p>
+<h3>sprint what?</h3>
+<p>A sprint is a set period of time during all kind of software developers come together to work on a certain project. In this case, the <a href="https://www.meetup.com/de-DE/Zope-Sprint/">migration of Zope from Python 2.7 to Python 3</a>.</p>
+<h3>history of Zope sprints @gocept</h3>
+<ul>
+<li><strong>May 2019</strong> <a href="https://www.meetup.com/de-DE/Zope-Sprint/events/259042717/">Saltlabs sprint - Zope spring cleaning</a> - next week! looking forward to participating a lot!</li>
+<li><strong>October 2018</strong> <a href="https://www.meetup.com/de-DE/Zope-Sprint/events/252468356/">Saltlabs sprint – Zope and Plone together</a> - 31 participants! both from Zope and Plone community - tons of fun - started revising the Zope Developer book - got a couple of T-Shirts from taking part at <a href="https://hacktoberfest.digitalocean.com/">Hacktoberfest 2018</a></li>
+<li><strong>May 2018</strong> <a href="https://www.meetup.com/de-DE/Zope-Sprint/events/248187180/">Zope 4 Welcome Sprint</a> - woot, my first sprint! paired a lot with Steffen and Daniel</li>
+<li><strong>September 2017</strong> <a href="https://www.meetup.com/de-DE/Zope-Sprint/events/240315699/">Zope 4 Phoenix Sprint</a> - my back then colleague took part - hi Gabe!</li>
+<li><strong>May 2017</strong> <a href="https://www.meetup.com/de-DE/Zope-Sprint/events/237672812/">Zope 2 Resurrection Sprint</a></li>
+<li><strong>May 2016</strong> <a href="https://www.meetup.com/de-DE/Zope-Sprint/events/232466542/">Zope Resurrection Sprint</a></li>
+</ul>
+<h2>open source is fun and you'll learn a lot!</h2>
+<ul>
+<li>new tools<ul>
+<li>travis</li>
+<li>tox</li>
+<li>sphinx</li>
+<li>...</li>
+</ul>
+</li>
+<li>best practices</li>
+<li>different coding style</li>
+<li>software architecture</li>
+<li>collaboration</li>
+<li>better utilization of GitHub and all its features</li>
+<li>...</li>
+</ul>
+<p>... but also historical facts ...
+<code>src/ZPublisher/HTTPResponse.py</code></p>
+<pre><code># Note that as of May 98, IE4 ignores cookies with
+# quoted cookie attr values, so only the value part
+# of name=value pairs may be quoted.
+</code></pre>
+<h2>one last thing</h2>
+<p>Contributing to open source software should not exclusively be at the expense of your free time!</p>
+<p>Ask your boss - today! Eventually, you'll be surprised - so was I.</p>
+<h2>notes</h2>
+<p>I presented this topic as a lightning talk at <a href="https://www.meetup.com/de-DE/Mobile-Stammtisch-GDG-Regensburg/events/257156080/">Mobile Stammtisch/GDG Regensburg</a> on 20. December 2018.</p>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../../../blog/ignore-requests-for-apple-touch-icons/">ignore requests for apple touch icons</a></h2>
   
   <p class="meta">

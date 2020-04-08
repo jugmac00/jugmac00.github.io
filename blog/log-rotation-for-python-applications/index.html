@@ -1,0 +1,93 @@
+<!doctype html>
+<head>
+<meta name="google-site-verification" content="txmqQrMWeC-Q8aYQOBrl04hiVU-3jBbfBsj5vK3OWSE" />
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../static/style.css">
+<title>Log Rotation for Python Applications - Without killing them softly — Jürgen Gmach</title>
+</head>
+<body>
+  <header>
+    <h1>Jürgen Gmach</h1>
+    <nav>
+      <ul class="nav navbar-nav">
+        <li><a href="../../">About me</a></li>
+        
+          <li class="active"><a href="../../blog/">Blog</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+  <div class="page">
+    
+  
+  <div class="blog-post">
+  
+    <h1>Log Rotation for Python Applications - Without killing them softly</h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/@jugmac00">Jürgen Gmach</a>
+    
+    on 2020-04-08
+  </p>
+  <p>A couple of days after a successful deployment of my <a href="https://zope.readthedocs.io/en/latest/">Zope 4</a> application, I noticed something worrisome.</p>
+<p>Zope gets killed every night, shortly after midnight.</p>
+<p>I use <a href="http://supervisord.org/">Supervisor</a>, which monitors the process and restarts it, so that's not the problem.</p>
+<p>But there are two problems:</p>
+<ul>
+<li>I did not trigger this on purpose.</li>
+<li>The cache of my app is cold, that means that my colleagues get slow response times for the first queries in the morning.</li>
+</ul>
+<h2>What's wrong?</h2>
+<p>Thanks to version controlled <a href="https://batou.readthedocs.io/en/latest/">configuration management</a> it was not hard to pick up a trail of the problem.</p>
+<p>The commit which looked most promising was one about introducing proper log rotation with <code>Logrotate</code>.</p>
+<p><code>Logrotate</code> manages automatic rotation and compression of your log files.</p>
+<p>Log rotation was setup to send a signal to Zope to close and re-open the log file as following:</p>
+<pre><code>/srv/app/deployment/work/zope/var/log/instance*.log  {
+
+postrotate
+kill -USR2 $(cat /srv/app/deployment/work/zope/var/instance/Z4.pid)
+endscript
+}
+</code></pre>
+<p><code>kill</code> sounds scary at first, but it isn't, or let's say, it shouldn't be.</p>
+<p>It just sends a signal to a process - and <code>USR2</code> happens to be a signal for which your application can use a customized reaction, e.g. log close and re-open.</p>
+<p>Looking at Zope's documentation, this is exactly how it should look like - and it definitely used to work this way back then with Zope 2. No mentions in the Zope documentation about a change.</p>
+<pre><code>SIGUSR2
+  close and re-open all Zope log files (z2.log, event log, detailed log.) The
+  common idiom after rotating Zope log files is::
+
+    kill -USR2 `cat $ZOPE_HOME/var/Z2.pid`
+</code></pre>
+<p>This excerpt was available under <a href="https://zope.readthedocs.io/en/latest/INSTALL.html">https://zope.readthedocs.io/en/latest/INSTALL.html</a> - meanwhile it was updated.</p>
+<p>So, this looks like a Zope bug, eh?</p>
+<p>Minimal setup to reproduce it... yep, Zope dies.</p>
+<p>Some back and forth between Zope's and Waitress' (WSGI server) maintainers about who should fix this, and... there is nothing to fix.</p>
+<p><strong>Zope decided to drop signal handling</strong> with the 2 to 4 update, and Waitress can't do it as it does not handle log files.</p>
+<h2>Excuse me, sir. What is the real problem here?</h2>
+<p>When <code>Logrotate</code> archives the current log file, and creates a new one, the current app's process keeps the handle to the original file, and keeps logging into it, although there is a new one.</p>
+<p>Usually, you can restart your app or send a special signal, like USR2 to your app to fix this problem, but as outlined above, both options do not work out great with my use case.</p>
+<h2>So, what to do?</h2>
+<p>Turns out, there are many options!</p>
+<ul>
+<li>log to a supervising process</li>
+<li>use <code>Logrotate</code>'s <a href="https://jlk.fjfi.cvut.cz/arch/manpages/man/logrotate.8#Files_and_Folders"><code>copytruncate</code></a> directive </li>
+<li>use Python's <a href="https://docs.python.org/3/library/logging.handlers.html#watchedfilehandler"><code>WatchedFileHandler</code></a></li>
+</ul>
+<p>Having used Python for more than a decade, I still get surprised by gems in the standard library I never heard of before. Like the <code>WatchedFileHandler</code>.</p>
+<p>While all three options are valid, the <code>WatchedFileHAndler</code> just does what is needed here. Watch the file for a change, then close the old file stream and open a new one.</p>
+<p>The final "configuration" of <code>Logrotate</code> is this simple:</p>
+<pre><code>/srv/app/deployment/work/zope/var/log/*.log  {
+
+}
+</code></pre>
+
+  </div>
+
+
+  </div>
+  <footer>
+    &copy; Copyright 2018 - 2020 by Jürgen Gmach.
+  </footer>
+</body>
