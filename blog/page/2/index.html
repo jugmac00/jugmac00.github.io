@@ -23,6 +23,114 @@
     
   <div class="blog-post">
   
+    <h1><a href="../../../blog/face-to-face-with-earl-zope/">Face to face with &#34;Earl Zope&#34; and his henchmen</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2019-05-03
+  </p>
+  <blockquote><p><strong><em>NOTE:</em></strong>  This blog post is <strong>WORK IN PROGRESS</strong> and will be updated regularly. Though, this post is first and foremost written for myself, please do not hesitate to drop me a line at juergen dot gmach at googlemail com or directly contribute to this article via <a href="https://github.com/jugmac00/jugmac00.github.io.source">GitHub.com</a>.</p>
+</blockquote>
+<p>This blog post tries to ease beginning and keeping up with development of the open source web application server <a href="https://zope.readthedocs.io/en/latest/">Zope</a> and its universe.</p>
+<h2>what makes it hard to start contributing to Zope</h2>
+<ul>
+<li><strong>Zope</strong> is a very mature product, as it was launched already back in <a href="https://en.wikipedia.org/wiki/Zope">1999</a></li>
+<li><strong>Zope</strong> underwent some major architectural changes (keyword <a href="http://muthukadan.net/docs/zca.html#introduction">ZCA</a>)</li>
+<li><strong>Zope</strong> itself is relatively complex</li>
+<li>there is also a complex ecosystem around it<ul>
+<li><a href="http://www.buildout.org/en/latest/">Buildout</a></li>
+<li><a href="https://travis-ci.org/">TravisCI</a></li>
+<li><a href="https://github.com/zopefoundation">GitHub.com</a></li>
+<li><a href="https://tox.readthedocs.io/en/latest/">tox</a> / <a href="https://opensource.com/article/19/5/python-tox">quick introduction</a></li>
+<li><a href="https://zopetestrunner.readthedocs.io/en/latest/">zope.testrunner</a></li>
+<li><a href="https://readthedocs.org/">Read the Docs</a></li>
+<li>...</li>
+</ul>
+</li>
+<li>documentation is partially out of date (but there is an effort to fix this)</li>
+<li>there are many developers which contribute for years, or even more than a decade, not many new developers</li>
+<li>there are many <strong>unwritten</strong> rules</li>
+</ul>
+<h2>prerequisites</h2>
+<p><strong>Zope</strong> and probably the most of its related packages are licensed under the <a href="https://directory.fsf.org/wiki/License:ZPL-2.1">ZPL</a>. In order to contribute to the project, you need to sign a <a href="http://docs.zope.org/developer/becoming-a-committer.html">contributor's agreement</a>. If you do not get a reply to your application in a reasonable amount of time, please resend your email.</p>
+<h2>development process</h2>
+<p>Once your application has been accepted, which is a mere formality, you may to start contributing.</p>
+<h3>where to find the source code</h3>
+<p>Zope and all its related packages, which reside under the umbrella of the Zope Foundation, are hosted at <a href="https://github.com/zopefoundation">GitHub</a>.</p>
+<p>For instance, the repository for Zope is located at <a href="https://github.com/zopefoundation/Zope">https://github.com/zopefoundation/Zope</a></p>
+<blockquote><p><strong><em>NOTE:</em></strong>  There are plans to merge the Zope Foundation into the <a href="https://plone.org/foundation">Plone Foundation</a> - current status is unknown.</p>
+</blockquote>
+<h3>flow</h3>
+<p>Though not 100% consistent, usually you cannot and you should not directly work on the master branch.</p>
+<p>The recommended way is to clone the repository and work on a new branch.</p>
+<p>Once finished, push your branch to the repository and create a pull request. Both your branch and the pull request will get automatically tested by TravisCI (see below).</p>
+<p>Most repositories need both green tests and a successful review before a pull request gets merged.</p>
+<p>Usually you will merge the branch yourself - in order to show off that you have signed the contributor agreement.</p>
+<p>After the pull request had been merged, please delete your branch.</p>
+<blockquote><p><strong><em>NOTE:</em></strong> If you want to implement very small changes - e.g. fixing typos - you can directly edit the file in your browser by clicking the pencil icon when viewing the file on GitHub.com.</p>
+</blockquote>
+<h3>tests</h3>
+<p>It is highly recommended that all code changes, bug fixes and new features should be tested by automatic tests.</p>
+<p>Unlike most other Python projects, <strong>Zope/universe</strong> does not make use of pytest - which can be both quite surprising and a bit of a hurdle.</p>
+<p><strong>Zope/universe</strong> makes heavily use of <a href="https://pypi.org/project/zope.testrunner/">zope.testrunner</a>.</p>
+<h3>supported python versions</h3>
+<p>Currently, Python 2.7, 3.5, 3.6, 3.7 and 3.8 (dev) are supported for most of the <strong>Zope 4/universe</strong> packages. This reflects the officially supported Python versions.</p>
+<p>Some packages also support <a href="https://pypy.org/">PyPy</a>.</p>
+<p>Afaik, there are plans to drop support for Python 2.7 with Zope 5.</p>
+<p>When adding support for a new Python version, or dropping support for an old one, you have to update several files:</p>
+<ul>
+<li>.travis.yml</li>
+<li>tox.ini</li>
+<li>setup.py</li>
+<li>CHANGES.rst</li>
+</ul>
+<h3>continuous integration - mostly via travisci</h3>
+<p>Whenever you push to a branch or make a pull request, <a href="https://travis-ci.org">TravisCI</a> automatically pulls your changes and runs the project's test suite.</p>
+<p>This is configured via a <strong>.travis.yml</strong> file at root level of the repository.</p>
+<blockquote><p><strong><em>NOTE:</em></strong>  For packages, which should be supported on the Windows plattform, <a href="https://www.appveyor.com/">AppVeyor</a> gets used.</p>
+</blockquote>
+<h3>travisci configuration</h3>
+<p>The configuration for TravisCI changes on quite a regular basis. There are OS upgrades, new and deprecated Python versions, syntax changes and also new and deprecated features for Travis itself.</p>
+<p>Depending on how the tests are run, whether there are checks for styles or coverage, the <strong>.travis.yml</strong> can be quite different for different packages.</p>
+<p>You can have a look at the recently updated configuration for <a href="https://github.com/zopefoundation/zExceptions/blob/master/.travis.yml">zExceptions</a> as a good example with up-to-date best practices.</p>
+<h3>deprecated travisci configuration</h3>
+<p>If you happen to see a <strong>sudo: false/true</strong> option in a <strong>.travis.yml</strong> file, you can safely remove it (cf. <a href="https://blog.travis-ci.com/2018-11-19-required-linux-infrastructure-migration">https://blog.travis-ci.com/2018-11-19-required-linux-infrastructure-migration</a>).</p>
+<h3>travisci trouble shooting</h3>
+<ul>
+<li>flaky tests - sometimes tests fail for <strong>no reason</strong> - you can try to dig deeper or just re-run the build by clicking the "rebuild" button on the TravisCI website.</li>
+<li>bad cache =&gt; clear cache - rarely this is necessary; a re-run should do the job most of the time - please find more information at the <a href="https://docs.travis-ci.com/user/caching/#clearing-caches">TravisCI documentation site</a>.</li>
+<li><strong>ImportError: libpython3.8m.so.1.0</strong>: cannot open shared object file: No such file or directory" =&gt; clear cache in TravisCI and restart build 1)</li>
+</ul>
+<p>1) Information by Dieter Maurer:</p>
+<blockquote><p>The Python 3.8 problem was (likely) discussed in the Python mailing list today: the newest Python version has changed <strong>sys.implementation.cache_tag</strong> which prevents Python from finding shared objects installed for earlier versions. "pip" on the other hand seems not to take thin into account and thinks that the older version is still usable. Clearing the cache should fix the problem.</p>
+</blockquote>
+<h2>updates</h2>
+<p><strong>2019.05.03</strong></p>
+<ul>
+<li>update <strong>what makes it hard to start contributing to Zope</strong>; also add links</li>
+</ul>
+<p><strong>2019.05.04</strong></p>
+<ul>
+<li>add section about support Python versions</li>
+</ul>
+<p><strong>2019.05.06</strong></p>
+<ul>
+<li>add link to a very concise tox introduction</li>
+</ul>
+<p><strong>2019.05.08</strong></p>
+<ul>
+<li>update TravisCI trouble shooting section</li>
+</ul>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../../../blog/it-is-never-too-late-too-join-the-party/">it&#39;s never too late to join the party!</a></h2>
   
   <p class="meta">
