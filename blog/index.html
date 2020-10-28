@@ -23,6 +23,260 @@
     
   <div class="blog-post">
   
+    <h1><a href="../blog/how-to-create-hundreds-of-pull-requests-with-a-single-command/">How to create hundreds of pull requests with a single command?</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/@jugmac00">Jürgen Gmach</a>
+    
+    on 2020-10-28
+  </p>
+  <p>... or "How to win <strong>#hacktoberfest</strong>"?</p>
+<p>Seriously...</p>
+<ul>
+<li><strong>#hacktoberfest</strong> is no longer cool ( <a href="https://blog.domenic.me/hacktoberfest/">Hacktoberfest is Hurting Open Source</a> )</li>
+<li>you cannot win it anyway</li>
+<li>the mass pull requests I created (see below) went all to repositories, which do not take part at <strong>#hacktoberfest</strong></li>
+</ul>
+<hr>
+<blockquote><p><strong><em>NOTE:</em></strong>
+If you do not like to read a lot of text,
+I also created a <a href="https://github.com/jugmac00/til/blob/master/zope/how-to-update-all-zopefoundation-repositories-at-once.md">super concise "today-I-learned" post</a>.</p>
+</blockquote>
+<hr>
+<h2>prologue</h2>
+<p>The company I work for has been using <a href="https://github.com/zopefoundation/Zope/">Zope</a>,
+the granddaddy of Python web application servers,
+for more than 15 years.</p>
+<p>What I love most about <strong>Zope</strong>,
+except for the stability and the low record of <a href="https://www.cvedetails.com/vulnerability-list/vendor_id-370/Zope.html">security issues</a>,
+is the small but fine community.</p>
+<p>Especially I love the fact, that almost all <strong>Zope</strong> plugins,
+which are sometimes called <strong>Products</strong>,
+are united in the <a href="https://github.com/zopefoundation"><code>zopefoundation</code></a> GitHub organization,
+with a current count of 392, of which 330 are active.</p>
+<p>Combine the idea of a central repository with the ease of anybody to <a href="https://www.zope.org/developer/becoming-a-committer.html">contribute</a>,
+and you'll see the obvious benefits immediately:</p>
+<p>Do you rely on one package, and there was a breaking change in a dependency?
+Do you need support for the newest Python version?
+No problem, either ask somebody for help or fix it yourself.
+No single repository will be left behind.</p>
+<p>Compare this to other frameworks,
+where most of the plugins are maintained by single persons,
+which start extremely enthusiastic and at some point in time loose interest.</p>
+<p>Having to maintain hundreds of repositories certainly comes with a cost.</p>
+<p>It is especially tedious,
+when you have to do small changes to lots or even all repositories.</p>
+<h2>the initial situation</h2>
+<p>We, the Zope maintainers/contributors,
+need to test our plugins against Python <code>3.9</code>,
+but <a href="https://travis-ci.com/">Travis</a>,
+the CI system we use,
+only offered Python <code>3.9-dev</code>, but no final version.</p>
+<p>So we tested against <code>3.9-dev</code>.</p>
+<h2>the "problem"</h2>
+<p>Travis finally provides <a href="https://travis-ci.community/t/python-3-9-0-build/10091/13?u=jugmac00">Python 3.9 final</a>.</p>
+<p>But how would we <a href="https://github.com/zopefoundation/meta/issues/37">update all repositories</a> which still use Python <code>3.9-dev</code>?</p>
+<p><a href="https://github.com/zopefoundation/meta/issues/37#issuecomment-717751883">Manually?</a> No way!</p>
+<h2>the solution</h2>
+<p><a href="https://github.com/asottile/all-repos">all-repos</a> provides a set of CLI tools,
+which enables you to e.g. clone all repos of a GitHub organization,
+search in them,
+do mass updates to them,
+and even finally create pull requests.</p>
+<p><code>all-repos</code> was created by one of the many Anthony Sottile clones out there,
+without them, the Python world would not be the same
+(Think of <code>pre-commit</code>, <code>pyupgrade</code>, <code>tox</code>, <code>flake8</code>, ...).</p>
+<p>Before you can start to work with <code>all-repos</code>,
+you need to</p>
+<ul>
+<li>install <a href="https://pypi.org/project/all-repos/">all-repos</a></li>
+<li><a href="https://github.com/settings/tokens/new">create a GitHub API token</a></li>
+<li>create a configuration file</li>
+</ul>
+<p>I assume you are able to install a Python package, either via <code>pipx</code>, in a virtual environment, or ...</p>
+<p>Also, the token creation is straight forward.
+A token basically allows programs to interact with GitHub on your behalf.</p>
+<h3>configuration</h3>
+<p>The configuration is done with a JSON file.</p>
+<p>Mine looks like so</p>
+<pre><code>{
+    "output_dir": "output",
+    "source": "all_repos.source.github_org",
+    "source_settings":  {
+        "api_key": "xxx",
+        "org": "zopefoundation"
+    },
+    "push": "all_repos.push.github_pull_request",
+    "push_settings": {
+        "api_key": "xxx",
+        "username": "jugmac00"
+    }
+}
+</code></pre>
+<p>where</p>
+<ul>
+<li><code>output_dir</code> is the folder where the repositories are cloned into</li>
+<li><code>source</code> is the way how to get hold of the repositories, in our case it is a GitHub organization</li>
+<li><code>api_key</code> is needed in order to access / write to the repositories</li>
+<li><code>org</code> is the corresponding GitHub organization</li>
+<li><code>push</code> configures what should be done after changes had been applied, here it is "create a pull request on GitHub"</li>
+<li><code>username</code> is the username which should be used for the pull request</li>
+</ul>
+<p>Once this is done, we are ready to go.</p>
+<h3>cloning all repositories</h3>
+<p>The most basic task is to clone all repositories. Too easy? Think of Zope`s 300+ repositories.</p>
+<pre><code>❯ all-repos-clone
+Initializing zopefoundation/zope.dottedname
+Initialized empty Git repository in /tmp/Zope/output/zopefoundation/zope.dottedname/.git/
+Initializing zopefoundation/zc.relationship
+Initialized empty Git repository in /tmp/Zope/output/zopefoundation/zc.relationship/.git/
+Initializing zopefoundation/zope.app.dependable
+...
+</code></pre>
+<h3>grepping all repos</h3>
+<p>Already one and a half year ago, I evaluated <code>all-repos</code>, but struggled a bit to wrap my head around advanced concepts like the so-called <code>autofixers</code>.</p>
+<p>On the other hand, grepping was and is straight forward, e.g. the following command looks for <code>3.9-dev</code> in all repositories' <code>.travis.yml</code> file.</p>
+<pre><code>❯ all-repos-grep --repos-with-matches 3.9-dev -- '.travis.yml'
+output/zopefoundation/AccessControl
+output/zopefoundation/Acquisition
+output/zopefoundation/AuthEncoding
+output/zopefoundation/DocumentTemplate
+...
+</code></pre>
+<p>where</p>
+<ul>
+<li><code>all-repos-grep</code> is the CLI tool we use =&gt; grep on all repositories</li>
+<li><code>--repos-with-matches</code> =&gt; only show repositories with a match</li>
+<li><code>3.9-dev</code> =&gt; the string we are looking for</li>
+<li><code>.travis.yml</code> =&gt; only look in files named <code>.travis.yml</code></li>
+</ul>
+<p>This is all fun, but how to get this party started?</p>
+<h3>update all <code>.travis.yml</code> files</h3>
+<blockquote><p><strong><em>NOTE:</em></strong>
+When you are on <strong>macOS</strong>, please have a look at the <a href="https://github.com/asottile/all-repos#all-repos-sed-options-expression-filenames">documentation</a> as the following command uses <strong>GNU sed</strong>,
+which may not be present on macOS.</p>
+</blockquote>
+<p>While <code>all-repos-grep</code> and other CLI commands like <code>all-repos-find-files</code> are read-only,
+the real fun starts with so-called <code>autofixers</code>.</p>
+<p><code>autofixers</code> are a tad underdocumented,
+so - as I already mentioned - I had a bit of hard to time to grasp the concept at first.</p>
+<p>Basically, an <code>autofixer</code> applies changes to all repositories which match a certain pattern.</p>
+<p>While there are pre-built <code>autofixers</code> like <code>all-repos-sed</code>,
+which we will use in a minute,
+you can also <a href="https://github.com/asottile/all-repos#writing-an-autofixer">create autofixers yourself</a>.</p>
+<p>Ok, so we can bulk-modify repositories, but what then?
+How do I commit the changes?
+How do I create a branch?
+A pull request?</p>
+<p>Here, the documentation is even more sparse,
+as there is only the API documentation for the <strong>push modules</strong>. Hm...</p>
+<p>Ok, first things first, let's try to update all repositories...</p>
+<p><code>all-repos-sed --commit-msg "Use Python 3.9 final" s/3.9-dev/3.9/g -- '.travis.yml'</code></p>
+<p>where</p>
+<ul>
+<li><code>all-repos-sed</code> is the CLI command we use =&gt; use <a href="https://www.gnu.org/software/sed/manual/sed.html">sed</a> on all repositories</li>
+<li><code>--commit-msg "Use Python 3.9 final"</code> =&gt; use a custom commit message</li>
+<li><code>s/3.9-dev/3.9/g</code> =&gt; replace <code>3.9-dev</code> with <code>3.9</code></li>
+<li><code>.travis.yml</code> =&gt; only look in <code>.travis.yml</code> files</li>
+</ul>
+<p>Still, what about the branches, the commits and the pull request...? Never mind, let's give it a go...</p>
+<pre><code>/tmp/Zope 
+❯ all-repos-sed --commit-msg "Use Python 3.9 final" s/3.9-dev/3.9/g -- '.travis.yml'
+***output/zopefoundation/Products.PythonScripts
+$ git clone --quiet output/zopefoundation/Products.PythonScripts /tmp/tmp_ve9eest
+$ git remote set-url origin git@github.com:zopefoundation/Products.PythonScripts
+$ git fetch --prune --quiet
+$ git checkout --quiet origin/HEAD -b all-repos_autofix_all-repos-sed
+$ sed -i s/3.9-dev/3.9/g .travis.yml
+$ git diff origin/HEAD --exit-code
+***output/zopefoundation/ZODB
+$ git clone --quiet output/zopefoundation/ZODB /tmp/tmp56hy_wls
+$ git remote set-url origin git@github.com:zopefoundation/ZODB
+$ git fetch --prune --quiet
+$ git checkout --quiet origin/HEAD -b all-repos_autofix_all-repos-sed
+$ sed -i s/3.9-dev/3.9/g .travis.yml
+$ git diff origin/HEAD --exit-code
+***output/zopefoundation/transaction
+$ git clone --quiet output/zopefoundation/transaction /tmp/tmpt5z_p_jc
+$ git remote set-url origin git@github.com:zopefoundation/transaction
+$ git fetch --prune --quiet
+$ git checkout --quiet origin/HEAD -b all-repos_autofix_all-repos-sed
+$ sed -i s/3.9-dev/3.9/g .travis.yml
+$ git diff origin/HEAD --exit-code
+***output/zopefoundation/BTrees
+$ git clone --quiet output/zopefoundation/BTrees /tmp/tmpgw8mhej5
+$ git remote set-url origin git@github.com:zopefoundation/BTrees
+$ git fetch --prune --quiet
+$ git checkout --quiet origin/HEAD -b all-repos_autofix_all-repos-sed
+$ sed -i s/3.9-dev/3.9/g .travis.yml
+$ git diff origin/HEAD --exit-code
+***output/zopefoundation/persistent
+$ git clone --quiet output/zopefoundation/persistent /tmp/tmpk7vmtr0w
+$ git remote set-url origin git@github.com:zopefoundation/persistent
+$ git fetch --prune --quiet
+$ git checkout --quiet origin/HEAD -b all-repos_autofix_all-repos-sed
+$ sed -i s/3.9-dev/3.9/g .travis.yml
+$ git diff origin/HEAD --exit-code
+diff --git a/.travis.yml b/.travis.yml
+index dba5aa4..dda3ec5 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -17,7 +17,7 @@ python:
+   - 3.6
+   - 3.7
+   - 3.8
+-  - 3.9-dev
++  - 3.9
+
+ jobs:
+   include:
+$ git commit --quiet -a -m 'Use Python 3.9 final
+
+Committed via https://github.com/asottile/all-repos'
+$ git push origin HEAD:all-repos_autofix_all-repos-sed --quiet
+remote: 
+remote: Create a pull request for 'all-repos_autofix_all-repos-sed' on GitHub by visiting:
+remote:      https://github.com/zopefoundation/persistent/pull/new/all-repos_autofix_all-repos-sed
+remote: 
+Pull request created at https://github.com/zopefoundation/persistent/pull/152
+...
+</code></pre>
+<p>Holy moly! It's a thing!</p>
+<p>One after another,
+this awesome tool goes through all repositories,
+creates a branch,
+updates <code>.travis.yml</code>,
+commits the changes,
+and creates a pull request,
+all automagically!</p>
+<p>Yeah, I know, that is what it is supposed to do, but holy sh... it is working!</p>
+<h3>meanwhile on Travis</h3>
+<p><img src="../blog/how-to-create-hundreds-of-pull-requests-with-a-single-command/travis.png" alt="Pull-Request-Mania-at-Travis"></p>
+<h3>after one hour in my inbox</h3>
+<p><img src="../blog/how-to-create-hundreds-of-pull-requests-with-a-single-command/inbox.png" alt="email-flood"></p>
+<h3>conclusion</h3>
+<p>This amazing tool works like a charm!
+For this task, it saved me at least a couple of hours.</p>
+<p>And there is much more it can do!</p>
+<h2>thanks</h2>
+<p>Thanks a lot, Anthony!
+<code>all-repos</code> certainly is another invaluable asset for working as a professional software developer,
+and especially helps maintaining <strong>open source</strong> projects on a large scale.</p>
+<h2>further information</h2>
+<ul>
+<li><a href="https://github.com/jugmac00/til/blob/master/zope/how-to-update-all-zopefoundation-repositories-at-once.md">concise version of this blog post</a></li>
+<li><a href="https://pypi.org/project/all-repos/">all-repos</a> on PyPI</li>
+<li><a href="https://twitter.com/codewithanthony">Anthony on Twitter</a></li>
+</ul>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../blog/flask-reuploaded/">Flask-Reuploaded</a></h2>
   
   <p class="meta">
@@ -834,70 +1088,6 @@ $ rm -rf google-chrome
 <li>add some links to pull requests and packages</li>
 <li>fixed my mix up of "zodbmigrate" -&gt; "zodbverify"</li>
 </ul>
-
-  </div>
-
-  
-    
-  <div class="blog-post">
-  
-    <h1><a href="../blog/recap-of-the-first-day-of-saltlabs-sprint-zope-spring-cleaning/">Recap day one of &#34;Zope spring cleaning&#34;</a></h2>
-  
-  <p class="meta">
-    written by
-    
-      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
-    
-    on 2019-05-09
-  </p>
-  <p><a href="https://www.meetup.com/de-DE/Zope-Sprint/events/259042717/">More infos about the sprint</a></p>
-<ul>
-<li>10 local sprinters</li>
-<li>2 remote sprinters (Jens Vagelpohl and Dieter Maurer)</li>
-</ul>
-<h2>progress</h2>
-<ul>
-<li>Steffen<ul>
-<li>had lots of fun with <a href="https://github.com/zopefoundation/Zope/issues/575">Nonsensical Path Infos</a></li>
-<li>had a look at some of the open documentation tickets</li>
-</ul>
-</li>
-<li>Jens Klein / Martin Häcker<ul>
-<li>created a <a href="https://github.com/zopefoundation/zodbupdate/pull/15">pull request</a> to improve the zodpupdate script</li>
-<li>created / extracted <a href="https://github.com/plone/zodbverify">plone/zodbverify</a> which can be used to check ZODB before the Python 2 -&gt; 3 migration</li>
-</ul>
-</li>
-<li>Jeremy<ul>
-<li>worked on porting recipe.testrunner to Python 3 and had some <em>fun</em> with doctests</li>
-</ul>
-</li>
-<li>Nilo<ul>
-<li>worked on an issue for RestrictedPython</li>
-<li>is about fixing a regression in ZCatalog, where sorting does no longer work</li>
-</ul>
-</li>
-<li>Jens Hinghaus<ul>
-<li>worked on <a href="https://github.com/zopefoundation/tempstorage/pull/11">tempstorage</a></li>
-<li>found and filed a bug in ZMI when using search</li>
-</ul>
-</li>
-<li>Michael<ul>
-<li>is about preparing the roadmap for the final release of Zope 4 (yee-haw)</li>
-<li>made a ton of releases for packages from the Zope universe</li>
-<li>spread rumors that the release date of <strong>Zope 5</strong> won't be in the very far future</li>
-</ul>
-</li>
-<li>Jürgen (me)<ul>
-<li>found <a href="https://github.com/zopefoundation/Products.ZCatalog/pull/73#issuecomment-490485033">Dieter's comment</a> about why so many Travis builds break with Python 3.8; =&gt; clear cache and restart build, did this for lots of broken builds</li>
-<li>revised the subsection about "Exceptions" of the <strong>Zope developer's guide</strong> and found and filed a <a href="https://github.com/zopefoundation/zExceptions/issues/8">bug</a> in zExceptions; also experienced some strange behaviour with custom exceptions which inherit from <strong>BaseException</strong> (don't do this at home) with waitress</li>
-</ul>
-</li>
-</ul>
-<p>Also, Jens Vagelpohl and Dieter Maurer contributed a lot by adding valuable insights to some complicated discussions, reviewed a lot of pull requests... Jens also added documentation about how to setup daemoize Zope 4 on a systemd powered Linux box and fixed on old bug with <a href="https://github.com/zopefoundation/Zope/pull/599">importing ZEXP files</a>.</p>
-<h2>Some more positive news...</h2>
-<p>Matthew Wilkes announced some <a href="https://community.plone.org/t/zope-contributor-agreement-process/8495">updates</a> on the upcoming merger of the Zope into the Plone foundation, and thus the improvements on the onboarding for new developers concerning the committer agreement.</p>
-<h2>other than that...</h2>
-<p>We have plenty of fun here. The venue ( <a href="https://twitter.com/koffij_halle">https://twitter.com/koffij_halle</a> ) is great - the food is excellent! Basti, the new cook, really rocks the kitchen!</p>
 
   </div>
 
