@@ -580,6 +580,135 @@ Fedora release 28 (Twenty Eight)
   </div>
 
   
+    
+  <div class="blog-post">
+  
+    <h1><a href="../../../blog/how-to-run-a-dockerized-service-via-systemd/">How to run a dockerized service via systemd?</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/@jugmac00">Jürgen Gmach</a>
+    
+    on 
+  </p>
+  <p>Until recently, I saw no good reason to use <strong>Docker</strong>,
+as my <a href="https://batou.readthedocs.io/en/stable/">deployment tool</a> of <em>choice</em> produces approximately identical builds,
+locally on my Ubuntu laptop, on staging and on production.</p>
+<p>But time does not stand still and especially as I have to deploy a Java application,
+it was time to rethink my strategy,
+as I do not want to play the <strong>which Java runtime environment plays nicely together with which app version</strong> game.</p>
+<p>Fortunately, <a href="https://www.jetbrains.com/">JetBrains</a>
+offers <a href="https://hub.docker.com/r/jetbrains/youtrack/">pre-built docker images</a>
+for <a href="https://www.jetbrains.com/youtrack/">YouTrack</a>, 
+my favorite issue tracker,
+which is the app I plan to install today.</p>
+<h2>simple is not always better</h2>
+<p>With a pre-built <strong>Docker</strong> image,
+<a href="https://www.jetbrains.com/help/youtrack/standalone/youtrack-docker-installation.html#run-youtrack-service">running the app</a> could be as simple as ...</p>
+<pre><code>docker run -it --name youtrack-server-instance  \
+    -v {path to data directory}:/opt/youtrack/data \
+    -v {path to conf directory}:/opt/youtrack/conf  \
+    -v {path to logs directory}:/opt/youtrack/logs  \
+    -v {path to backups directory}:/opt/youtrack/backups  \
+    -p {port on host}:8080 \
+    jetbrains/youtrack:{version}
+</code></pre>
+<p>... but it is both tedious to type this long command,
+and also the process would not survive a reboot of the host system.</p>
+<blockquote><p><strong><em>NOTE:</em></strong>
+<a href="https://github.com/jugmac00/til/blob/master/docker/difference-between-docker-create-start-run.md">Do you know the difference between <code>docker create</code>, <code>docker run</code> and <code>docker start</code>?</a>.</p>
+</blockquote>
+<p>While we are here, let's dissect this complex command:</p>
+<ul>
+<li><code>run</code> creates and starts a container</li>
+<li><code>-it</code> provides an interactive tty, ie show output in the terminal</li>
+<li><code>--name</code> gives the container a name</li>
+<li><code>-v</code> maps folders between the host and the container</li>
+<li><code>-p</code> maps ports between the host and the container</li>
+<li><code>jetbrains/youtrack:{version}</code> is finally the docker image</li>
+</ul>
+<h2>run docker container as a systemd service</h2>
+<p>Instead of manually starting the docker service,
+let's use <strong>systemd</strong> to start it, even after a reboot.</p>
+<p>JetBrains offers a <a href="https://www.jetbrains.com/help/youtrack/standalone/run-docker-container-as-service.html">concise documentation</a> on how to do this.</p>
+<h2>unit file</h2>
+<p>Basically, just create a unit file at <code>/etc/systemd/system/docker.youtrack.service</code>,
+with the following content...</p>
+<pre><code>[Unit]
+Description=YouTrack Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker exec %n stop
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull jetbrains/youtrack:&lt;version&gt;
+ExecStart=/usr/bin/docker run --rm --name %n \
+    -v &lt;path to data directory&gt;:/opt/youtrack/data \
+    -v &lt;path to conf directory&gt;:/opt/youtrack/conf \
+    -v &lt;path to logs directory&gt;:/opt/youtrack/logs \
+    -v &lt;path to backups directory&gt;:/opt/youtrack/backups \
+    -p &lt;port on host&gt;:8080 \
+    jetbrains/youtrack:&lt;version&gt;
+
+[Install]
+WantedBy=default.target
+</code></pre>
+<p>... where, on a very high level,</p>
+<ul>
+<li>the unit section gives this service a name, and defines the dependencies,</li>
+<li>the service section configures the command to be executed,</li>
+<li>and the install section defines when this service should be started.</li>
+</ul>
+<p>Finally, you can enable it via <code>systemctl enable docker.youtrack</code>,
+so it starts after the next reboot,
+and start and stop it manually via <code>sudo service docker.youtrack start</code> / <code>sudo service docker.youtrack stop</code>.</p>
+<h2>some failures</h2>
+<p>This all worked out perfectly,
+and <code>YouTrack</code> was available via my browser,
+except I was worried a bit about the output of <code>systemctl status docker.youtrack</code>:</p>
+<p><img src="../../../blog/how-to-run-a-dockerized-service-via-systemd/status.png" alt="systemd status"></p>
+<p>Why are there two failures?</p>
+<p>From all I knew about <strong>Docker</strong>,
+the run command should create and start a container,
+so the container should be persistent,
+even after a restart.</p>
+<p>Which would finally mean,
+<strong>systemd</strong> should successfully stop and delete the docker container e.g. on restart.</p>
+<h3>dissect the service section of the unit file</h3>
+<p>Let's have another look at the <em>Service</em> section from above, especially at the following two lines.</p>
+<pre><code>ExecStartPre=-/usr/bin/docker exec %n stop
+ExecStartPre=-/usr/bin/docker rm %n
+</code></pre>
+<ul>
+<li><code>ExecStartPre</code> is pretty self explaining, and means "excute this command before starting the service"</li>
+<li>the dash, <code>-</code>, just before the command, means it is ok when the following command fails - do not stop on failure!</li>
+<li><code>%n</code> expands to the service, ie <code>docker.youtrack.service</code></li>
+</ul>
+<p>So, this means, <strong>failures</strong> are expected!</p>
+<p>Let's have a look at the <code>run</code> command...</p>
+<p><code>ExecStart=/usr/bin/docker run --rm --name %n</code></p>
+<ul>
+<li><code>ExecStart</code> is the main process</li>
+<li><code>docker run</code>, as we now know, creates and starts a container</li>
+<li><code>--rm</code> - here we go, this makes sure the container is deleted on exit!</li>
+<li><code>--name</code> sets the name of the container</li>
+<li><code>%n</code> is the placeholder for the service</li>
+</ul>
+<h2>conclusion</h2>
+<p>Everything is working as expected!</p>
+<p>The <code>stop</code> and the <code>delete</code> commands are only safe guards,
+just in case another container with the same name exists,
+or is even running.</p>
+<p>Running pre-built <strong>Docker</strong> images is a breeze.</p>
+<p>But you certainly should know the basics :-)</p>
+
+  </div>
+
+  
 
   
   <div class="pagination">
