@@ -98,7 +98,7 @@ WantedBy=default.target
 </code></pre>
 <p>... where, on a very high level,</p>
 <ul>
-<li>the unit section gives this service a name, and defines the dependencies,</li>
+<li>the unit section gives this service a name, and defines the prerequisites and dependencies,</li>
 <li>the service section configures the command to be executed,</li>
 <li>and the install section defines when this service should be started.</li>
 </ul>
@@ -108,7 +108,7 @@ and start and stop it manually via <code>sudo service docker.youtrack start</cod
 <h2>some failures</h2>
 <p>This all worked out perfectly,
 and <code>YouTrack</code> was available via my browser,
-except I was worried a bit about the output of <code>systemctl status docker.youtrack</code>:</p>
+except I was worried a bit about the output of <code>systemctl status docker.youtrack</code>...</p>
 <p><img src="../../blog/how-to-run-a-dockerized-service-via-systemd/status.png" alt="systemd status"></p>
 <p>Why are there two failures?</p>
 <p>From all I knew about <strong>Docker</strong>,
@@ -123,8 +123,8 @@ even after a restart.</p>
 ExecStartPre=-/usr/bin/docker rm %n
 </code></pre>
 <ul>
-<li><code>ExecStartPre</code> is pretty self explaining, and means "excute this command before starting the service"</li>
-<li>the dash, <code>-</code>, just before the command, means it is ok when the following command fails - do not stop on failure!</li>
+<li><code>ExecStartPre</code> is pretty self explaining, and means "execute this command before starting the service"</li>
+<li>the dash, <code>-</code>, just before the command, means it is ok when the following command fails = do not stop on failure!</li>
 <li><code>%n</code> expands to the service, ie <code>docker.youtrack.service</code></li>
 </ul>
 <p>So, this means, <strong>failures</strong> are expected!</p>
