@@ -23,6 +23,112 @@
     
   <div class="blog-post">
   
+    <h1><a href="../blog/convincing-an-enterprisy-app-to-work-behind-nginx-as-reverse-proxy/">Convincing an enterprisy app to work behind nginx as reverse proxy</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/@jugmac00">Jürgen Gmach</a>
+    
+    on 2020-10-30
+  </p>
+  <p>For simplicity, let's the call the app <strong>Dated HR</strong>,
+a tool to "Simplify your HR work",
+which offers support for time tracking, holiday, payroll...</p>
+<p>So far so good, and even better,
+as it is an enterprisy Windows software,
+which needs to be configured with <strong>IIS</strong> and a <strong>MSSQL</strong> database,
+a colleague of mine installed it on an internal Windows server.</p>
+<p>The app makes a web GUI available under <a href="http://nemesis.company.local">http://nemesis.company.local</a>,
+which would work like a charm - for our colleagues at site,
+but not for the colleagues from the other sites.</p>
+<p>But certainly, it is 2020, you want encryption via https,
+and also the other colleagues need web access.</p>
+<p>Setting up <strong>nginx</strong> as reverse proxy is business as usual.</p>
+<p>Also, adding https via <strong>Certbot</strong> can't get much simpler:
+<a href="https://certbot.eff.org/">https://certbot.eff.org/</a></p>
+<p>So far, so good, the app is now available via
+<a href="https://hr.company.com">https://hr.company.com</a></p>
+<p>The app seems to work,
+but when clicking on a special button
+(I refrain from calling it a link,
+as it is a humongous JavaScripty-eventlistener-from-data-attribute-fetching something),
+I get a ...</p>
+<p><code>This site cannot be reached" nemesis.company.local’s server IP address could not be found.</code></p>
+<p>Having a look at the HTML source,
+a wild mix of relative and absolute URLs show up,
+where the latter have <code>http://nemesis.company.local</code> hardcoded.</p>
+<p>If this was an open source app, I could</p>
+<ul>
+<li>read the documentation on the internet</li>
+<li>have a look in the source code</li>
+<li>have a look at the issue tracker</li>
+<li>search on Stack Overflow</li>
+<li>...</li>
+</ul>
+<p>...but... did I mention it is an <strong>enterprisy</strong> app?</p>
+<p>So, let's tell the Windows admin to configure the app properly.</p>
+<p>Turns out, there is no option.</p>
+<p>Asking vendor for support also did not work out:</p>
+<blockquote><p>The reported behavior cannot be changed.</p>
+</blockquote>
+<p>Well, maybe you cannot... but I can - possibly.</p>
+<p><strong>nginx</strong>, my favorite web server,
+can rewrite HTML on the fly,
+via the <a href="http://nginx.org/en/docs/http/ngx_http_sub_module.html">http_sub_module</a>.</p>
+<p>While this module is not compiled into <strong>nginx</strong> by default,
+luckily the <strong>Ubuntu</strong> developers included it.</p>
+<p>So, adding the following snippet to my location block should do the trick...</p>
+<pre><code>sub_filter 'http://nemesis.company.local' 'https://$host';
+sub_filter_once off;
+</code></pre>
+<p>where</p>
+<ul>
+<li>the first directive replaces the local host name with the one of the reverse proxy</li>
+<li>and the second one makes sure every occurrence gets replaced</li>
+</ul>
+<p>After restarting <strong>nginx</strong>,
+I still get the same error. <strong>bummer</strong>.</p>
+<p>I double checked,
+no more occurrences in the generated HTML, CSS or JavaScript...</p>
+<p>Hm, let's have a look at the <strong>HTTP headers</strong> in the debug console.</p>
+<p>Here we go, the <code>location</code> header of the response had the following value...</p>
+<p><code>http://nemesis.company.lcoal/.../.../.../.../Default.aspx</code></p>
+<p>Once more, after some googling,
+the <strong>nginx</strong> documentation offered a solution
+via the <a href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_redirect">proxy_redirect directive</a>.</p>
+<p>While <code>proxy_redirect</code> sounds a bit odd,
+the description makes more sense:</p>
+<blockquote><p>Sets the text that should be changed in the "Location" and "Refresh" header fields of a proxied server response.</p>
+</blockquote>
+<p>Very nice, let's add the following snippet to my location block...</p>
+<pre><code>proxy_redirect http://nemesis.company.local https://$host;
+</code></pre>
+<p>After restarting <strong>nginx</strong> once more,
+everything works as intended!</p>
+<p>The complete location block looks like...</p>
+<pre><code>location / {
+    proxy_pass http://nemesis.company.local:80/;
+    sub_filter 'http://nemesis.company.local' 'https://$host';
+    sub_filter_once off;
+    proxy_redirect http://nemesis.company.local https://$host;
+    }
+</code></pre>
+<p>Finally, the enterprisy app works like a charm - thanks to <strong>open source</strong>!</p>
+<p>P.S.: While debugging the errors,
+I found several seriously outdated JS libraries with some known <strong>CVE</strong> entries.</p>
+<p>Looking forward to the vendor's answer!</p>
+<p>At very least the developers of this very app show good humor,
+as they named the variables after cocktails,
+which I can relate to.</p>
+<p>Cheers! Prost! Na zdraví!</p>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../blog/how-to-run-a-dockerized-service-via-systemd/">How to run a dockerized service via systemd?</a></h2>
   
   <p class="meta">
@@ -1098,71 +1204,6 @@ You cannot query arbitrary data - all fields, subfields, parameters... have to b
 $ rm -rf google-chrome
 </code></pre>
 <p>It is as simple as that. And sure, I experience many more rough edges since I migrated to a Linux desktop, but I always feel like I keep the control and every problem is very easily fixable.</p>
-
-  </div>
-
-  
-    
-  <div class="blog-post">
-  
-    <h1><a href="../blog/recap-day-three-and-wrap-up-of-zope-spring-cleaning/">Recap day three and wrap up of &#34;Zope spring cleaning&#34;</a></h2>
-  
-  <p class="meta">
-    written by
-    
-      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
-    
-    on 2019-05-10
-  </p>
-  <p>This blog post is work in progess... much more to come - but the train is only 10 minutes late (uncommon in Germany :-) ) , so I am not able finish the blog post now.</p>
-<h2>tl/dr - what a ride!</h2>
-<ul>
-<li>today there was the final release of Zope 4! see <a href="https://blog.gocept.com/2019/05/10/celebration-zope-4-final-release/">blog post @gocept</a></li>
-<li>Michael / @gocept announced the <a href="https://blog.gocept.com/2019/05/10/zope-roadmap/">roadmap</a> for Zope 2.13, Zope 4 and Zope 5</li>
-</ul>
-<h2>progress on day 3</h2>
-<p>The main effort of everybody at the sprint was to wrap up all loose ends, finalize what one started, and of course get Zope 4 final released!</p>
-<p>As there was no final standup, I try to list what I picked up...</p>
-<ul>
-<li>Michael<ul>
-<li>finish and publish the above mentioned blog posts</li>
-<li>trying to not get lost with those massive incoming GitHub updates</li>
-<li>preparing and finally publishing the release of Zope 4</li>
-<li>had a deeper look into the "allowed attributes" ticket together with Steffen; a safe last minute fix was not possible</li>
-<li>even found time to review some open pull requests and to give me a helping hand for a test setup</li>
-</ul>
-</li>
-<li>Jeremy<ul>
-<li>finished enabling <a href="https://github.com/zopefoundation/zc.recipe.testrunner/pull/3">support for Python 3</a> for the zc.recipe.testrunner</li>
-</ul>
-</li>
-<li>Steffen<ul>
-<li>made up his mind about <a href="https://github.com/zopefoundation/Zope/issues/617">how to improve the speed for the Windows tests</a></li>
-</ul>
-</li>
-<li>Daniel<ul>
-<li><a href="https://github.com/zopefoundation/Products.ZCatalog/pull/77">improved styling</a> of the ZCatalog</li>
-</ul>
-</li>
-<li>Jens Klein<ul>
-<li>updated <a href="https://github.com/zopefoundation/Zope/pull/608">ZODB migration story</a></li>
-<li>oh noes! announced the news that <strong>Plone</strong> - for some cases - can't yet use <strong>Zope 4</strong> - info came from Philip Bauer, cf <a href="https://github.com/zopefoundation/Zope/pull/610">ticket "allowed attributes"</a></li>
-</ul>
-</li>
-<li>Jens Hinghaus<ul>
-<li>got his pull request merged for <a href="https://github.com/zopefoundation/Zope/pull/605">fixing the ZMI serarch bug</a></li>
-</ul>
-</li>
-<li>Jürgen<ul>
-<li>update <a href="https://zope.readthedocs.io/en/latest/zdgbook/ObjectPublishing.html#xml-rpc">section about XML-RPC</a> of the Zope developer's guide, which also was the last section of Chapter 4 - which I started updating a whopping 8 months ago!!</li>
-<li>started working on Chapter 5 <a href="https://zope.readthedocs.io/en/latest/zdgbook/Products.html">Zope Products</a></li>
-<li>....</li>
-</ul>
-</li>
-</ul>
-<p>Again, Jens Vagelpohl, Marius and Dieter and maybe some more guys I possibly missed, supported the sprint massively from remote!</p>
-<h2>more news</h2>
-<p>There are some more news about <a href="https://community.plone.org/t/zope-contributor-agreement-process/8495">merging the Zope into the Plone foundation</a>.</p>
 
   </div>
 

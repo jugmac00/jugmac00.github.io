@@ -1,0 +1,132 @@
+<!doctype html>
+<head>
+<meta name="google-site-verification" content="txmqQrMWeC-Q8aYQOBrl04hiVU-3jBbfBsj5vK3OWSE" />
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../static/style.css">
+<title>Convincing an enterprisy app to work behind nginx as reverse proxy — Jürgen Gmach</title>
+</head>
+<body>
+  <header>
+    <h1>Jürgen Gmach</h1>
+    <nav>
+      <ul class="nav navbar-nav">
+        <li><a href="../../">About me</a></li>
+        
+          <li class="active"><a href="../../blog/">Blog</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+  <div class="page">
+    
+  
+  <div class="blog-post">
+  
+    <h1>Convincing an enterprisy app to work behind nginx as reverse proxy</h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/@jugmac00">Jürgen Gmach</a>
+    
+    on 2020-10-30
+  </p>
+  <p>For simplicity, let's the call the app <strong>Dated HR</strong>,
+a tool to "Simplify your HR work",
+which offers support for time tracking, holiday, payroll...</p>
+<p>So far so good, and even better,
+as it is an enterprisy Windows software,
+which needs to be configured with <strong>IIS</strong> and a <strong>MSSQL</strong> database,
+a colleague of mine installed it on an internal Windows server.</p>
+<p>The app makes a web GUI available under <a href="http://nemesis.company.local">http://nemesis.company.local</a>,
+which would work like a charm - for our colleagues at site,
+but not for the colleagues from the other sites.</p>
+<p>But certainly, it is 2020, you want encryption via https,
+and also the other colleagues need web access.</p>
+<p>Setting up <strong>nginx</strong> as reverse proxy is business as usual.</p>
+<p>Also, adding https via <strong>Certbot</strong> can't get much simpler:
+<a href="https://certbot.eff.org/">https://certbot.eff.org/</a></p>
+<p>So far, so good, the app is now available via
+<a href="https://hr.company.com">https://hr.company.com</a></p>
+<p>The app seems to work,
+but when clicking on a special button
+(I refrain from calling it a link,
+as it is a humongous JavaScripty-eventlistener-from-data-attribute-fetching something),
+I get a ...</p>
+<p><code>This site cannot be reached" nemesis.company.local’s server IP address could not be found.</code></p>
+<p>Having a look at the HTML source,
+a wild mix of relative and absolute URLs show up,
+where the latter have <code>http://nemesis.company.local</code> hardcoded.</p>
+<p>If this was an open source app, I could</p>
+<ul>
+<li>read the documentation on the internet</li>
+<li>have a look in the source code</li>
+<li>have a look at the issue tracker</li>
+<li>search on Stack Overflow</li>
+<li>...</li>
+</ul>
+<p>...but... did I mention it is an <strong>enterprisy</strong> app?</p>
+<p>So, let's tell the Windows admin to configure the app properly.</p>
+<p>Turns out, there is no option.</p>
+<p>Asking vendor for support also did not work out:</p>
+<blockquote><p>The reported behavior cannot be changed.</p>
+</blockquote>
+<p>Well, maybe you cannot... but I can - possibly.</p>
+<p><strong>nginx</strong>, my favorite web server,
+can rewrite HTML on the fly,
+via the <a href="http://nginx.org/en/docs/http/ngx_http_sub_module.html">http_sub_module</a>.</p>
+<p>While this module is not compiled into <strong>nginx</strong> by default,
+luckily the <strong>Ubuntu</strong> developers included it.</p>
+<p>So, adding the following snippet to my location block should do the trick...</p>
+<pre><code>sub_filter 'http://nemesis.company.local' 'https://$host';
+sub_filter_once off;
+</code></pre>
+<p>where</p>
+<ul>
+<li>the first directive replaces the local host name with the one of the reverse proxy</li>
+<li>and the second one makes sure every occurrence gets replaced</li>
+</ul>
+<p>After restarting <strong>nginx</strong>,
+I still get the same error. <strong>bummer</strong>.</p>
+<p>I double checked,
+no more occurrences in the generated HTML, CSS or JavaScript...</p>
+<p>Hm, let's have a look at the <strong>HTTP headers</strong> in the debug console.</p>
+<p>Here we go, the <code>location</code> header of the response had the following value...</p>
+<p><code>http://nemesis.company.lcoal/.../.../.../.../Default.aspx</code></p>
+<p>Once more, after some googling,
+the <strong>nginx</strong> documentation offered a solution
+via the <a href="http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_redirect">proxy_redirect directive</a>.</p>
+<p>While <code>proxy_redirect</code> sounds a bit odd,
+the description makes more sense:</p>
+<blockquote><p>Sets the text that should be changed in the "Location" and "Refresh" header fields of a proxied server response.</p>
+</blockquote>
+<p>Very nice, let's add the following snippet to my location block...</p>
+<pre><code>proxy_redirect http://nemesis.company.local https://$host;
+</code></pre>
+<p>After restarting <strong>nginx</strong> once more,
+everything works as intended!</p>
+<p>The complete location block looks like...</p>
+<pre><code>location / {
+    proxy_pass http://nemesis.company.local:80/;
+    sub_filter 'http://nemesis.company.local' 'https://$host';
+    sub_filter_once off;
+    proxy_redirect http://nemesis.company.local https://$host;
+    }
+</code></pre>
+<p>Finally, the enterprisy app works like a charm - thanks to <strong>open source</strong>!</p>
+<p>P.S.: While debugging the errors,
+I found several seriously outdated JS libraries with some known <strong>CVE</strong> entries.</p>
+<p>Looking forward to the vendor's answer!</p>
+<p>At very least the developers of this very app show good humor,
+as they named the variables after cocktails,
+which I can relate to.</p>
+<p>Cheers! Prost! Na zdraví!</p>
+
+  </div>
+
+
+  </div>
+  <footer>
+    &copy; Copyright 2018 - 2020 by Jürgen Gmach.
+  </footer>
+</body>
