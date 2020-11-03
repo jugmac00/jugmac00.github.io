@@ -98,7 +98,7 @@ you need to</p>
 <p>Also, the token creation is straight forward.
 A token basically allows programs to interact with GitHub on your behalf.</p>
 <h3>configuration</h3>
-<p>The configuration is done with a JSON file.</p>
+<p>The configuration is done with a JSON file, which is named <code>all-repos.json</code> by default.</p>
 <p>Mine looks like so</p>
 <pre><code>{
     "output_dir": "output",
@@ -159,8 +159,6 @@ which may not be present on macOS.</p>
 </blockquote>
 <p>While <code>all-repos-grep</code> and other CLI commands like <code>all-repos-find-files</code> are read-only,
 the real fun starts with so-called <code>autofixers</code>.</p>
-<p><code>autofixers</code> are a tad underdocumented,
-so - as I already mentioned - I had a bit of hard to time to grasp the concept at first.</p>
 <p>Basically, an <code>autofixer</code> applies changes to all repositories which match a certain pattern.</p>
 <p>While there are pre-built <code>autofixers</code> like <code>all-repos-sed</code>,
 which we will use in a minute,
@@ -169,8 +167,6 @@ you can also <a href="https://github.com/asottile/all-repos#writing-an-autofixer
 How do I commit the changes?
 How do I create a branch?
 A pull request?</p>
-<p>Here, the documentation is even more sparse,
-as there is only the API documentation for the <strong>push modules</strong>. Hm...</p>
 <p>Ok, first things first, let's try to update all repositories...</p>
 <p><code>all-repos-sed --commit-msg "Use Python 3.9 final" s/3.9-dev/3.9/g -- '.travis.yml'</code></p>
 <p>where</p>
@@ -279,6 +275,11 @@ and it especially helps maintaining <strong>open source</strong> projects on a l
 <p>2020-10-28</p>
 <ul>
 <li>add info on how to <a href="https://github.com/asottile/all-repos#all_repospushmerge_to_master">directly push to master</a></li>
+</ul>
+<p>2020-03-11</p>
+<ul>
+<li>remove criticism of the documentation, constructive attempts to fix it is better, right?</li>
+<li>add default name of configuration file</li>
 </ul>
 
   </div>
