@@ -155,7 +155,7 @@ and found out that my machine ran out of memory and started killing processes.</
 <p>But why?</p>
 <p>I had another look at my script and still had no clue.</p>
 <p>I asked at the <a href="https://discord.gg/tox">tox discord channel</a>,
-and both Anthony and Bernát gave me a few hints,
+and both Anthony and Bernát gave me some valuable tips,
 I ran my script again,
 and after quite some time again, it made boom again.</p>
 <p>Finally, I pinpointed the problem to a single repository,
@@ -167,13 +167,20 @@ and showed me the result.</p>
 <blockquote><p>tox 4 alpha 6 on 288 Zope repositories, 17 without tox, 62 successful, 208 broken builds</p>
 </blockquote>
 <p>Bernát's reaction: "a 22% success here, not that great news :smile: but on plus side seems if we fix zope we should be in a decent place"</p>
-<p>That was my intention!</p>
+<p>That was my intention! :-)</p>
 <p>P.S.: By the way, there are certainly not 208 different errors / bugs,
 it is more like there are roundabout four different error cases,
 which I will have a look at myself at first,
 and when it turns out this is not a problem in the package,
 I will report an issue at the issue tracker of tox.</p>
-<p>I will update this blog post with the error reports.</p>
+<h2>thanks</h2>
+<p>Thanks to Anthony and Bernát for all your work in the Python open source eco system,
+and for always being friendly and helpful!</p>
+<h2>found and reported issues</h2>
+<ul>
+<li><a href="https://github.com/zopefoundation/zope.testrunner/issues/112"><code>package init file missing</code> warning when running tox4</a></li>
+</ul>
+<p>I will update this list with all the reported issues, be it at the tox or the project's issue tracker.</p>
 
   </div>
 
