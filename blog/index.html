@@ -33,7 +33,7 @@
     on 2021-03-01
   </p>
   <p>Every once in a while,
-you may read that one of your favorite used packages announces an new version.</p>
+you may read that one of your favorite used packages announces a new version.</p>
 <p>Sometimes even a so-called alpha version is announced.</p>
 <p>The maintainers then politely ask you, the user, to test the package,
 and give feedback if anything is broken.</p>
@@ -58,7 +58,7 @@ and found quite a couple of issues for the projects I maintain (
 ).</p>
 <p>They were all addressed in no time.</p>
 <p>Reporting issues in pre-releases is important both for you,
-so you can use the new version once it gets released without a hassle,
+so you can use the new version once it gets released without any hassle,
 and also for the maintainer,
 who does not get stressed out completely on the day the new package gets released.</p>
 <p>End of story...</p>
@@ -67,15 +67,15 @@ who does not get stressed out completely on the day the new package gets release
 <p>Maybe you know that I am contributor to the <a href="https://zope.readthedocs.io/en/latest/">Zope project</a>.
 Zope is the bedrock of Python web frameworks.
 And while development has come to a <em>sustainable</em> path, it is still used out in the wild.</p>
-<p>One characteristic, which I miss for other projects is,
+<p>One characteristic, which I miss in other projects, is
 that not only the core project,
 but also hundreds and hundreds of plugins are managed together in one <a href="https://github.com/zopefoundation">GitHub organization</a>.</p>
 <p>I mentioned the advantages already a couple of times.</p>
 <p>All contributors can access all packages, fix minor issues,
-which means, no package is left behind,
-and no package depends of the good will of a single maintainer,
-who always start euphoric,
-and at one point in time neglect the project because of real life or switching company or language.</p>
+which means no package is left behind,
+and no package depends on the good will of a single maintainer,
+who always starts euphoric,
+and at one point in time neglects the project because of real life or switching company or language.</p>
 <p>Ok, so we use <strong>tox</strong> in most of the roundabout 300 active packages.</p>
 <p>How would I be able to run <strong>tox alpha</strong> on all of them?</p>
 <h2>all-repos to the rescue</h2>
@@ -83,14 +83,14 @@ and at one point in time neglect the project because of real life or switching c
 by <a href="https://twitter.com/codewithanthony">Anthony Sottile</a> previously in
 <a href="https://jugmac00.github.io/blog/how-to-create-hundreds-of-pull-requests-with-a-single-command/">How to create hundreds of pull requests with a single command?</a>,
 but this time it is different.</p>
-<p>If you have not encounter <strong>all-repos</strong> yet...</p>
+<p>If you have not encountered <strong>all-repos</strong> yet...</p>
 <p>In short, with <strong>all-repos</strong> you can clone all of your and your organization's repositories,
 find files,
 grep in them,
 mass apply changes to them and finally create pull requests,
 all from the command line.</p>
 <p>But afaik <strong>all-repos</strong> does not offer an easy way to run a custom command on all repositories.</p>
-<p>Also, unlike e.g. <strong>pytest</strong>, it also does not offer a plugin mechanism, but ...</p>
+<p>Also, unlike e.g. <strong>pytest</strong>, it also does not offer any plugin mechanism, but ...</p>
 <p>It is super easy to use <strong>all-test</strong> as a library.</p>
 <h2>use the source</h2>
 <p>While the <a href="https://github.com/asottile/all-repos/blob/master/README.md">README</a> offers a nice overview of the API,
@@ -102,7 +102,7 @@ I chose the script for <a href="https://github.com/asottile/all-repos/blob/maste
 which basically does everything I wanted,
 except executing <strong>tox</strong>.</p>
 <p>So, <strong>all-repos</strong> exposes a <code>load_config</code> method,
-with which I get hold on all repositories,
+with which I get hold of all repositories,
 and instead of just printing their paths as in <code>all-repos-list-repos</code>,
 I need to check whether they contain a <strong>tox.ini</strong> file,
 and if so, run <strong>tox4 alpha</strong>.</p>
@@ -159,7 +159,7 @@ and found out that my machine ran out of memory and started killing processes.</
 <p>I asked at the <a href="https://discord.gg/tox">tox discord channel</a>,
 and both Anthony and Bernát gave me some valuable tips on how to improve my code.</p>
 <p>I ran my script again,
-and after quite some time again, it made boom again.</p>
+and after quite some time it made boom again.</p>
 <p>Finally, with the help of a system monitoring tool,
 I pinpointed the problem to a single repository,
 which for some yet to be investigated reasons,
@@ -175,7 +175,7 @@ and showed me the result.</p>
 it is more like there are roundabout four different error cases,
 which I will have a look at myself at first,
 and when it turns out this is not a problem in the package,
-I will report an issue at the issue tracker of tox.</p>
+I will report an issue in the issue tracker of tox.</p>
 <h2>thanks</h2>
 <p>Thanks to Anthony and Bernát for all your work in the Python open source eco system,
 and for always being friendly and helpful!</p>
@@ -1378,6 +1378,6 @@ You cannot query arbitrary data - all fields, subfields, parameters... have to b
 
   </div>
   <footer>
-    &copy; Copyright 2018 - 2020 by Jürgen Gmach.
+    &copy; Copyright 2018 - 2021 by Jürgen Gmach.
   </footer>
 </body>
