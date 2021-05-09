@@ -1,0 +1,113 @@
+<!doctype html>
+<head>
+<meta name="google-site-verification" content="txmqQrMWeC-Q8aYQOBrl04hiVU-3jBbfBsj5vK3OWSE" />
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../static/style.css">
+<title>Bite my shiny, type-annotated library! — Jürgen Gmach</title>
+</head>
+<body>
+  <header>
+    <h1>Jürgen Gmach</h1>
+    <nav>
+      <ul class="nav navbar-nav">
+        <li><a href="../../">About me</a></li>
+        
+          <li class="active"><a href="../../blog/">Blog</a></li>
+        
+      </ul>
+    </nav>
+  </header>
+  <div class="page">
+    
+  
+  <div class="blog-post">
+  
+    <h1>Bite my shiny, type-annotated library!</h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2021-05-09
+  </p>
+  <p>How do you make type annotations available for users of your library?</p>
+<p>Well, you just type annotate your library, right?</p>
+<p>No!</p>
+<p>But let's step back for a moment.</p>
+<h2>Flask 2.0 goes full type annotations</h2>
+<p>This morning I read David Lord's <a href="https://twitter.com/davidism/status/1391130343286001664">announcement</a> that Flask, Jinja, Click, Werkzeug, MarkupSafe,
+and ItsDangerous are now fully type annotated,
+and new releases will be available next week.</p>
+<p>Ok, as I typed <a href="https://github.com/jugmac00/flask-reuploaded">Flask-Reuploaded</a> almost a year ago,
+I certainly noticed that Flask was not typed back then,
+but external type information was provided via <a href="https://github.com/python/typeshed">typeshed</a>,
+which I remember lively, as I had to add a missing type annotation for <a href="https://github.com/python/typeshed/pull/4308">Werkzeug</a>.</p>
+<h2>I wonder how...</h2>
+<p>I immediately wondered, how the type checkers then would know whether to use the inline type information or the type stubs from <strong>typeshed</strong>.</p>
+<p>Anthony Sottile responded on the Twitter thread,
+that <a href="https://www.python.org/dev/peps/pep-0561/">PEP 561</a> handles this and he linked to one of his <a href="https://www.youtube.com/watch?v=n4GJ8rp6DpE">videos</a>.</p>
+<p>In short - you need to include an empty <code>py.typed</code> in your repository/package.</p>
+<p>What?</p>
+<p>So, this basically means the applied type annotations have been in vain - for almost an entire year.</p>
+<p>I am not the only one bitten by that. I am in <a href="https://github.com/encode/httpx/issues/193">very good company</a>.</p>
+<p>By the way... <code>py.typed</code> has to be in your package root, not necessarily in your git root!</p>
+<h2>Make mypy and co aware of your type annotations</h2>
+<p>So, we know what to do, but how?</p>
+<p>This depends on your build backend... and some more things,
+like whether you prefer <code>setup.py</code> or <code>setup.cfg</code>,
+whether you prefer to use <code>package_data</code> or rather <code>include_package_data</code> and use a <code>MANIFEST.in</code>...</p>
+<p>Nobody claimed Python packaging is easy!</p>
+<h3>MANIFEST.in</h3>
+<p>After adding <code>py.typed</code> to my repository,
+the indispensible <a href="https://pypi.org/project/check-manifest/">check-manifest</a> told me what to do:</p>
+<pre><code>❯ check-manifest 
+lists of files in version control and sdist do not match!
+missing from sdist:
+  py.typed
+suggested MANIFEST.in rules:
+  include *.typed
+</code></pre>
+<p>or simply add e.g. ...</p>
+<pre><code>include src/your_package/py.typed
+</code></pre>
+<p>P.S.: Do not forget to add the <code>include_package_data=True</code> directive to your <code>setup.py</code>,
+otherwise <code>py.typed</code> will be included in the sdist, but not in the wheel.</p>
+<p>Sounds logical? Right... :-/</p>
+<h3>setup.py</h3>
+<p>If you do not use a <code>MANIFEST.in</code>, but <code>setuptools</code> with a <code>setup.py</code>...</p>
+<pre><code>setup(
+    package_data={"your_package": ["py.typed"]},
+)
+</code></pre>
+<p>While we are at it... take care that <code>py.typed</code> is not matched by <code>exclude_package_data</code>.</p>
+<p>Got it? Almost :-)</p>
+<p>You also need to make sure you have the <code>zip_safe=False</code> directive set.</p>
+<h3>setup.cfg</h3>
+<p>If you prefer a <code>setup.cfg</code> over a <code>setup.py</code>...</p>
+<pre><code>[options.package_data]
+your_package = py.typed
+</code></pre>
+<h3>poetry</h3>
+<p>If you are into <code>poetry</code>...</p>
+<pre><code>[tool.poetry]
+packages = [
+  {include = "your_package/py.typed"},
+]
+</code></pre>
+<h3>flit</h3>
+<p>No clue. Do you know? Drop me a line via email or twitter,
+contact details see <a href="https://jugmac00.github.io">https://jugmac00.github.io</a></p>
+<h2>Conclusion</h2>
+<p>I want to end this journey into the depths of Python packaging with the famous words of a colleague on mine:</p>
+<p>"Kaum macht man's richtig, schon geht's."</p>
+<p>(Translation: When you start doing it the right way, it will eventually work out.)</p>
+
+  </div>
+
+
+  </div>
+  <footer>
+    &copy; Copyright 2018 - 2021 by Jürgen Gmach.
+  </footer>
+</body>

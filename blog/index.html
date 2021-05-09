@@ -23,6 +23,93 @@
     
   <div class="blog-post">
   
+    <h1><a href="../blog/bite-my-shiny-type-annotated-library/">Bite my shiny, type-annotated library!</a></h2>
+  
+  <p class="meta">
+    written by
+    
+      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
+    
+    on 2021-05-09
+  </p>
+  <p>How do you make type annotations available for users of your library?</p>
+<p>Well, you just type annotate your library, right?</p>
+<p>No!</p>
+<p>But let's step back for a moment.</p>
+<h2>Flask 2.0 goes full type annotations</h2>
+<p>This morning I read David Lord's <a href="https://twitter.com/davidism/status/1391130343286001664">announcement</a> that Flask, Jinja, Click, Werkzeug, MarkupSafe,
+and ItsDangerous are now fully type annotated,
+and new releases will be available next week.</p>
+<p>Ok, as I typed <a href="https://github.com/jugmac00/flask-reuploaded">Flask-Reuploaded</a> almost a year ago,
+I certainly noticed that Flask was not typed back then,
+but external type information was provided via <a href="https://github.com/python/typeshed">typeshed</a>,
+which I remember lively, as I had to add a missing type annotation for <a href="https://github.com/python/typeshed/pull/4308">Werkzeug</a>.</p>
+<h2>I wonder how...</h2>
+<p>I immediately wondered, how the type checkers then would know whether to use the inline type information or the type stubs from <strong>typeshed</strong>.</p>
+<p>Anthony Sottile responded on the Twitter thread,
+that <a href="https://www.python.org/dev/peps/pep-0561/">PEP 561</a> handles this and he linked to one of his <a href="https://www.youtube.com/watch?v=n4GJ8rp6DpE">videos</a>.</p>
+<p>In short - you need to include an empty <code>py.typed</code> in your repository/package.</p>
+<p>What?</p>
+<p>So, this basically means the applied type annotations have been in vain - for almost an entire year.</p>
+<p>I am not the only one bitten by that. I am in <a href="https://github.com/encode/httpx/issues/193">very good company</a>.</p>
+<p>By the way... <code>py.typed</code> has to be in your package root, not necessarily in your git root!</p>
+<h2>Make mypy and co aware of your type annotations</h2>
+<p>So, we know what to do, but how?</p>
+<p>This depends on your build backend... and some more things,
+like whether you prefer <code>setup.py</code> or <code>setup.cfg</code>,
+whether you prefer to use <code>package_data</code> or rather <code>include_package_data</code> and use a <code>MANIFEST.in</code>...</p>
+<p>Nobody claimed Python packaging is easy!</p>
+<h3>MANIFEST.in</h3>
+<p>After adding <code>py.typed</code> to my repository,
+the indispensible <a href="https://pypi.org/project/check-manifest/">check-manifest</a> told me what to do:</p>
+<pre><code>❯ check-manifest 
+lists of files in version control and sdist do not match!
+missing from sdist:
+  py.typed
+suggested MANIFEST.in rules:
+  include *.typed
+</code></pre>
+<p>or simply add e.g. ...</p>
+<pre><code>include src/your_package/py.typed
+</code></pre>
+<p>P.S.: Do not forget to add the <code>include_package_data=True</code> directive to your <code>setup.py</code>,
+otherwise <code>py.typed</code> will be included in the sdist, but not in the wheel.</p>
+<p>Sounds logical? Right... :-/</p>
+<h3>setup.py</h3>
+<p>If you do not use a <code>MANIFEST.in</code>, but <code>setuptools</code> with a <code>setup.py</code>...</p>
+<pre><code>setup(
+    package_data={"your_package": ["py.typed"]},
+)
+</code></pre>
+<p>While we are at it... take care that <code>py.typed</code> is not matched by <code>exclude_package_data</code>.</p>
+<p>Got it? Almost :-)</p>
+<p>You also need to make sure you have the <code>zip_safe=False</code> directive set.</p>
+<h3>setup.cfg</h3>
+<p>If you prefer a <code>setup.cfg</code> over a <code>setup.py</code>...</p>
+<pre><code>[options.package_data]
+your_package = py.typed
+</code></pre>
+<h3>poetry</h3>
+<p>If you are into <code>poetry</code>...</p>
+<pre><code>[tool.poetry]
+packages = [
+  {include = "your_package/py.typed"},
+]
+</code></pre>
+<h3>flit</h3>
+<p>No clue. Do you know? Drop me a line via email or twitter,
+contact details see <a href="https://jugmac00.github.io">https://jugmac00.github.io</a></p>
+<h2>Conclusion</h2>
+<p>I want to end this journey into the depths of Python packaging with the famous words of a colleague on mine:</p>
+<p>"Kaum macht man's richtig, schon geht's."</p>
+<p>(Translation: When you start doing it the right way, it will eventually work out.)</p>
+
+  </div>
+
+  
+    
+  <div class="blog-post">
+  
     <h1><a href="../blog/testing-the-tox-4-pre-release-at-scale/">Testing the tox 4 pre-release at scale</a></h2>
   
   <p class="meta">
@@ -1247,117 +1334,6 @@ You cannot query arbitrary data - all fields, subfields, parameters... have to b
 <p>2019-12-28</p>
 <ul>
 <li>add notes about lightning talk</li>
-</ul>
-
-  </div>
-
-  
-    
-  <div class="blog-post">
-  
-    <h1><a href="../blog/pyconweb-2019/">Came for the talks, stayed for the raffles</a></h2>
-  
-  <p class="meta">
-    written by
-    
-      <a href="https://twitter.com/jugmac00">Jürgen Gmach</a>
-    
-    on 2019-05-27
-  </p>
-  <h2>summary of pyconweb 2019</h2>
-<p>F... awesome!</p>
-<h2>talks and workshops</h2>
-<p>I tried to collect all slides from Twitter and Telegram - in case I missed some, please drop me a line <a href="https://twitter.com/jugmac00">@jugmac00</a>.</p>
-<h3>Saturday, 25 May 2019</h3>
-<ul>
-<li>Building robust APIs</li>
-<li>Tornado Web Services on AsyncIO</li>
-<li>Bocadilla, or how I built an open source async web framework<ul>
-<li><a href="https://www.dropbox.com/s/7z4kde2kjawoc54/pyconweb-slides.pdf?dl=0">slides@Dropbox</a> | <a href="https://github.com/florimondmanca/talks/blob/master/2019_05_25-bocadillo_pyconweb2019.pdf">slides@Github</a></li>
-</ul>
-</li>
-<li>Introduction to GraphQL and Graphene<ul>
-<li><a href="https://github.com/Speedy1991/graphql_workshop">source</a></li>
-</ul>
-</li>
-<li>Hello to the World in 8 Web Frameworks<ul>
-<li><a href="https://noti.st/aaronbassett/lK9Ah7/hello-to-the-world-in-8-web-frameworks-micro-batteries-included-async">slides and video</a></li>
-<li><a href="https://twitter.com/aaronbassett">@aaronbassett</a></li>
-</ul>
-</li>
-<li>Life without passwords</li>
-<li>The dos and don'ts of task queues</li>
-<li>An introduction to D3.js for data visualization</li>
-<li>Matrix: Building a decentralized messaging plattform using Python and Twisted</li>
-<li>"Where are the keys?" Solving day-to-day Problems using Tech<ul>
-<li><a href="https://www.slideshare.net/mobile/nithishrw/where-are-the-keys-solving-daytoday-problems-using-tech">slides</a></li>
-</ul>
-</li>
-<li>Teaching how to start developing web applications with Python</li>
-<li>Dependency Injection in Python: Lessons Learned from Enterprise Web Development</li>
-<li>Using Python, Matrix and TensorFlow to analyse the content of messages</li>
-<li>Documentation in practice</li>
-<li>Testing network interactions in Python<ul>
-<li><a href="https://t.co/Rq5Lf5yFm0">slides</a></li>
-<li><a href="https://github.com/Stranger6667/testing-network">example code</a></li>
-<li><a href="https://twitter.com/Stranger6667">@Stranger6667</a></li>
-</ul>
-</li>
-<li>Your Name is Invalid!<ul>
-<li><a href="https://twitter.com/eumiro">@eumiro</a></li>
-</ul>
-</li>
-</ul>
-<h3>Sunday, 26 May 2019</h3>
-<ul>
-<li>New web platform security features for modern webapps</li>
-<li>TurboGears, 10+ years of redesigning a web framework</li>
-<li>What do travel, food &amp; health websites have in common? Auditing websites &amp; apps for privacy leaks<ul>
-<li><a href="https://www.slideshare.net/konarkmodi/pyconweb-2019-auditing-websites-apps-for-privacy-leaks-147658330">slides</a></li>
-<li><a href="https://twitter.com/konarkmodi">@konarkmodi</a></li>
-</ul>
-</li>
-<li>Web Infrastructure Management made easy with Terraform</li>
-<li>Testing Python security<ul>
-<li><a href="https://speakerdeck.com/jmortega/testing-python-security-pyconweb">slides</a></li>
-<li><a href="https://twitter.com/jmortegac">@jmortegac</a></li>
-</ul>
-</li>
-<li>Introduction to Cython</li>
-<li>Real world Graphene: lessons learned from building a GraphQL API on top of a large Django project</li>
-<li>An alternative approach to Plone theming<ul>
-<li><a href="https://de.slideshare.net/santonelli/alternative-approach-to-plone-theming-pyconweb-2019">slides</a></li>
-<li><a href="https://twitter.com/stefanantonelli">@stefanantonelli</a></li>
-</ul>
-</li>
-<li>Is Django too complicated?</li>
-<li>Creating Crazy Robotic Librarians</li>
-<li>Tech bankruptcy: Looking back on a decade of bad decision making</li>
-<li>Using AI to Power Your Images<ul>
-<li><a href="https://www.slideshare.net/dougsillars/ai-powered-images">slides</a></li>
-</ul>
-</li>
-<li>Kubernetes Workshop</li>
-<li>Managing the charge process for fleets of electric vehicles using Python and OCPP</li>
-<li>Context matters: producing more useful logs with Python<ul>
-<li><a href="https://speakerdeck.com/fergalwalsh/context-matters-more-useful-logging-with-python">slides</a></li>
-</ul>
-</li>
-<li>Augmented and virtual reality on the web<ul>
-<li><a href="https://www.slideshare.net/dougsillars/a-rt-gallery-pyconweb">slides</a></li>
-</ul>
-</li>
-</ul>
-<h2>post scriptum</h2>
-<p>Thanks for the <strong>Echo Dot</strong>! I have not yet dared to open the pandora's box, but I will!</p>
-<h2>updates</h2>
-<p>2019-06-03</p>
-<ul>
-<li>add link to slides for "Testing Python security"
-2019-05-28</li>
-<li>add link to slides for "Auditing websites.."</li>
-<li>remove wrong link to Sunday's keynote</li>
-<li>add another link to slides for the "Bocadillo talk"</li>
 </ul>
 
   </div>
