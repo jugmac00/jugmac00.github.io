@@ -62,6 +62,4 @@ the obvious (and wrong) way Go to Settings Devices Keyboard Keyboard Shortcuts C
 Python Linux Open Source I spend a good amount of my spare time
 as a maintainer of Flask-Reuploaded as an admirer of tox as a preserver of Morepath as an apprentice of Zope Additionally, I have also contributed to meanwhile more than 300 other open source projects.</description></item><item><title>talks</title><link>https://jugmac00.github.io/talks/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jugmac00.github.io/talks/</guid><description>Since 2018, I have given many talks at many occasions. I especially enjoy giving lightning and thunder talks.
 I want to thank both the Google Developer Group in Regensburg and Python Ireland for giving me a chance to become a more experienced speaker.
-May 2021 PyCon US - to be announced!
-(Info) May 2021 Python Ireland - topic will be revealed after PyCon US.
-(Info) April 2021 World Plone Day - In &amp;ldquo;Testing the tox4 Pre-Release at Plone-/Zope-Scale&amp;rdquo; I spoke about applying the tox pre-release on more than 300 Zope and dozens of Plone repositories.</description></item></channel></rss>
+May 2021 PyCon US - In &amp;ldquo;How to Maintain Many, Many, Many, Many&amp;hellip; Many Git Repositories?!&amp;rdquo; I walk through the amazing all-repos command line app, and show how to search and grep in many repositories, and finally, how to apply changes to all of them.</description></item></channel></rss>
