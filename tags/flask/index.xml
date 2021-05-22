@@ -2,4 +2,8 @@
 Either Flask persists the data into a database or a file, or it does not.
 Wait, not so fast. There is also
 session scoped data (e.g. storing data in a cookie or similar) app scoped data (e.g. store data on the app object) The caveats
-session scoped data is only available for one client, and as long the session lasts app scoped data is only available within a single app - usually, e.</description></item></channel></rss>
+session scoped data is only available for one client, and as long the session lasts app scoped data is only available within a single app - usually, e.</description></item><item><title>How Can You Inject the Language as String Into a Jinja Template</title><link>https://jugmac00.github.io/til/how-can-you-inject-the-language-as-string-into-a-jinja-template/</link><pubDate>Thu, 13 Aug 2020 22:15:25 +0200</pubDate><guid>https://jugmac00.github.io/til/how-can-you-inject-the-language-as-string-into-a-jinja-template/</guid><description>I created a multilingual project using Flask with the help of Flask-Babel.
+While the translation mechanism via GNU gettext itself is pretty straightforward, I did not know how to inject the actual language into the Jinja template, so I can use it to set &amp;lt;html lang=&amp;quot;xxx&amp;quot;&amp;gt;.
+While it is odd that this is not mentioned in the documentation, once again StackOverflow offered solutions.
+solution one Just translate the language!
+&amp;lt;html lang=&amp;#34;{{ _(&amp;#39;en&amp;#39;) }}&amp;#34;&amp;gt; That was too simple to think of :-)</description></item></channel></rss>
