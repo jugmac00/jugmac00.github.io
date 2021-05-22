@@ -27,7 +27,13 @@ all-repos to the rescue I really love to play with all-repos, an awesome tool to
 You can easily grep for text or find files in, or even apply patches to hundreds or thousands of repositories at once, which I already described in a blog post.
 all-repos has a configuration option, which allows you to clone and manage all of your GitHub repositories at once.
 Mine looks like&amp;hellip;
-{ &amp;#34;output_dir&amp;#34;: &amp;#34;output&amp;#34;, &amp;#34;source&amp;#34;: &amp;#34;all_repos.</description></item><item><title>How to Use the Output of One Bash Command as the Argument of Another</title><link>https://jugmac00.github.io/til/how-to-use-the-output-of-one-bash-command-as-the-argument-of-another/</link><pubDate>Mon, 07 Sep 2020 18:52:25 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-use-the-output-of-one-bash-command-as-the-argument-of-another/</guid><description>TIL my TIL is not secure There is a security issue with the following description - at least when you handle sensitive data.
+{ &amp;#34;output_dir&amp;#34;: &amp;#34;output&amp;#34;, &amp;#34;source&amp;#34;: &amp;#34;all_repos.</description></item><item><title>What Is the Difference Between Docker Create, Docker Start and Docker Run</title><link>https://jugmac00.github.io/til/what-is-the-difference-between-docker-create-docker-start-and-docker-run/</link><pubDate>Thu, 29 Oct 2020 21:56:22 +0200</pubDate><guid>https://jugmac00.github.io/til/what-is-the-difference-between-docker-create-docker-start-and-docker-run/</guid><description>In order to be able to answer this question, you have to know that there are
+Docker images Docker containers Docker images are blueprints or templates.
+Docker containers are the instances, created from the images.
+docker create creates a container from an image
+docker start starts a container
+docker run creates a container and starts it
+note Trying to use the run command twice results in something like&amp;hellip;</description></item><item><title>How to Use the Output of One Bash Command as the Argument of Another</title><link>https://jugmac00.github.io/til/how-to-use-the-output-of-one-bash-command-as-the-argument-of-another/</link><pubDate>Mon, 07 Sep 2020 18:52:25 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-use-the-output-of-one-bash-command-as-the-argument-of-another/</guid><description>TIL my TIL is not secure There is a security issue with the following description - at least when you handle sensitive data.
 see here https://github.com/jugmac00/til/commit/7ea93202cecf97070c8931bbe5a1f64c78d41dcb#commitcomment-42050997
 Thanks to Anthony Sottile for reporting!
 Please see https://unix.stackexchange.com/questions/205180/how-to-pass-password-to-mysql-command-line for a better way to create a login one-liner.

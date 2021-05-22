@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>docker on Jürgen Gmach</title><link>https://jugmac00.github.io/tags/docker/</link><description>Recent content in docker on Jürgen Gmach</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 29 Oct 2020 21:56:22 +0200</lastBuildDate><atom:link href="https://jugmac00.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>What Is the Difference Between Docker Create, Docker Start and Docker Run</title><link>https://jugmac00.github.io/til/what-is-the-difference-between-docker-create-docker-start-and-docker-run/</link><pubDate>Thu, 29 Oct 2020 21:56:22 +0200</pubDate><guid>https://jugmac00.github.io/til/what-is-the-difference-between-docker-create-docker-start-and-docker-run/</guid><description>In order to be able to answer this question, you have to know that there are
+Docker images Docker containers Docker images are blueprints or templates.
+Docker containers are the instances, created from the images.
+docker create creates a container from an image
+docker start starts a container
+docker run creates a container and starts it
+note Trying to use the run command twice results in something like&amp;hellip;</description></item></channel></rss>
