@@ -3,4 +3,7 @@ For one PDF document template I received a new logo file which was produced with
 The RML library cannot handle ai-files, but eps-files.
 In order to convert the file I used Ghostscript as following:
 gs -dNOPAUSE -dBATCH -sDEVICE=eps2write -sOutputFile=out.eps input.ai where
--dNOPAUSE means &amp;ldquo;no pause after page&amp;rdquo; -dBATCH means &amp;ldquo;exit after last file&amp;rdquo; -sDEVICE selects the device -sOutputFile is the name of the - you can guess it - output file P.</description></item></channel></rss>
+-dNOPAUSE means &amp;ldquo;no pause after page&amp;rdquo; -dBATCH means &amp;ldquo;exit after last file&amp;rdquo; -sDEVICE selects the device -sOutputFile is the name of the - you can guess it - output file P.</description></item><item><title>Which Image Formats Are Supported by ReportLab's PDF Library</title><link>https://jugmac00.github.io/til/which-image-formats-are-supported-by-reportlabs-pdf-library/</link><pubDate>Tue, 19 Jan 2021 11:00:45 +0200</pubDate><guid>https://jugmac00.github.io/til/which-image-formats-are-supported-by-reportlabs-pdf-library/</guid><description>ReportLab is an open source library for generating PDFs, written in Python.
+While ReportLab is absolutely battle tested, even Wikipedia uses it for PDF generation, documentation lacks a bit.
+I could not find a reliable source for supported image formats.
+Also, there is both an open source and a commercial license for ReportLab, with different feature sets. The latter one is supposed to be able to treat PDFs as image files, which then can be embedded.</description></item></channel></rss>
