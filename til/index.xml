@@ -154,4 +154,7 @@ Turns out, there are a couple of options&amp;hellip;</description></item><item><
 e.g. with from unittest.case import expectedFailure just when I typed assert result == expected.
 Luckily, the developers heard on the users, and with version 2020.8.0 this &amp;ldquo;feature&amp;rdquo; is optional.
 In order to deactivate it, set the following option to false:
-python.analysis.autoImportCompletions Thank you, Savannah!</description></item></channel></rss>
+python.analysis.autoImportCompletions Thank you, Savannah!</description></item><item><title>How to Replace the Old With the New Decorator Syntax for Zope's Security Declarations</title><link>https://jugmac00.github.io/til/how-to-replace-the-old-with-the-new-decorator-syntax-for-zopes-security-declarations/</link><pubDate>Sat, 11 Apr 2020 13:52:33 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-replace-the-old-with-the-new-decorator-syntax-for-zopes-security-declarations/</guid><description>Zope&amp;rsquo;s security architecture is built upon security declarations, which scope can be either a method, several methods or even a complete class.
+Until recently you usually declared the security for a method like this&amp;hellip;
+from AccessControl import getSecurityManager class Suggestions(SomeBaseClass): security = ClassSecurityInfo() security.declareProtected(&amp;#34;View&amp;#34;, &amp;#34;all_suggestions&amp;#34;) def all_suggestions(): ... Then, when accessing this method, e.g. the logged in user&amp;rsquo;s role or group was checked against the security declaration.
+One big disadvantage was that you could easily introduce typos.</description></item></channel></rss>
