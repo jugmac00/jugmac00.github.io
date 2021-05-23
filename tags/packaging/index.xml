@@ -6,4 +6,9 @@ I alpha-tested the latest release (4.0.0a2), and reported a couple of problems.
 Within a day Bernát published some fixes on the rewrite branch, and asked me to test it.
 That means there is no new package on PyPI, yet.
 So, I had to install tox directly from GitHub, to be exact, from the rewrite branch:
-pip install git+https://github.com/tox-dev/tox@rewrite or more general</description></item></channel></rss>
+pip install git+https://github.com/tox-dev/tox@rewrite or more general</description></item><item><title>Why Is Setuptools a Runtime Dependency</title><link>https://jugmac00.github.io/til/why-is-setuptools-a-runtime-dependency/</link><pubDate>Thu, 23 Jul 2020 14:03:32 +0200</pubDate><guid>https://jugmac00.github.io/til/why-is-setuptools-a-runtime-dependency/</guid><description>&amp;hellip; or in other words&amp;hellip;
+Why is this snippet part of setup.py in all Zope projects?
+install_requires = &amp;#39;setuptools&amp;#39;, This sounds weird at first, but there is good reason.
+setuptools provides pkg_resources, and the latter is used in __init__.py, in order to declare a namespace package.
+__import__(&amp;#39;pkg_resources&amp;#39;).declare_namespace(__name__) Still confused?
+While pkg_resources-style namespace packages are no longer recommended for new projects, this approach was used to split large packages, and retrieve the contents from more than one location.</description></item></channel></rss>
