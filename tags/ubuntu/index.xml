@@ -2,4 +2,7 @@
 No!
 At least, not necessarily.
 Basically, you need to understand that there are different repository types for Ubuntu:
-type maintained by canonical floss guaranteed support in years main yes yes 5 restricted yes no ? universe no yes ?</description></item></channel></rss>
+type maintained by canonical floss guaranteed support in years main yes yes 5 restricted yes no ? universe no yes ?</description></item><item><title>How to List Packages Which Can Be Upgraded</title><link>https://jugmac00.github.io/til/how-to-list-packages-which-can-be-upgraded/</link><pubDate>Mon, 13 Jul 2020 13:04:41 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-list-packages-which-can-be-upgraded/</guid><description>Have you ever logged into your Ubuntu machine and you get greeted with xxx packages can be updated?
+Do you want to know which packages can be updated before running apt upgrade?
+This is for you (and me):
+apt list --upgradable</description></item></channel></rss>
