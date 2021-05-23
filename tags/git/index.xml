@@ -7,7 +7,12 @@ the current main version is on master the upcoming version 4, which is a complet
 Certainly, I do not want to commit them, but putting it into every&amp;rsquo;s repository .gitignore file is also cumbersome - and sometimes it is not possible.
 I always do a git add -u to avoid accidentally adding a venv or similar, so it did not really matter.
 Except&amp;hellip;
-❯ .</description></item><item><title>How to Configure Git for Testing</title><link>https://jugmac00.github.io/til/how-to-configure-git-for-testing/</link><pubDate>Mon, 16 Nov 2020 07:01:19 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-configure-git-for-testing/</guid><description>batou is a configuration management and deployment tool, comparable to Ansible.
+❯ .</description></item><item><title>How to Install a Python Package Directly From a Git Branch From GitHub</title><link>https://jugmac00.github.io/til/how-to-install-a-python-package-directly-from-a-git-branch-from-github/</link><pubDate>Mon, 11 Jan 2021 08:55:54 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-install-a-python-package-directly-from-a-git-branch-from-github/</guid><description>Bernát Gábor is currently working on a complete rewrite for tox.
+I alpha-tested the latest release (4.0.0a2), and reported a couple of problems.
+Within a day Bernát published some fixes on the rewrite branch, and asked me to test it.
+That means there is no new package on PyPI, yet.
+So, I had to install tox directly from GitHub, to be exact, from the rewrite branch:
+pip install git+https://github.com/tox-dev/tox@rewrite or more general</description></item><item><title>How to Configure Git for Testing</title><link>https://jugmac00.github.io/til/how-to-configure-git-for-testing/</link><pubDate>Mon, 16 Nov 2020 07:01:19 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-configure-git-for-testing/</guid><description>batou is a configuration management and deployment tool, comparable to Ansible.
 With batou you can deploy applications, also from git repositories.
 For this batou uses the git binary - so this has to be tested somehow.
 One test looks like this&amp;hellip;
