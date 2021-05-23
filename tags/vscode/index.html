@@ -3,7 +3,11 @@
 Certainly, I do not want to commit them, but putting it into every’s repository .gitignore file is also cumbersome - and sometimes it is not possible.
 I always do a git add -u to avoid accidentally adding a venv or similar, so it did not really matter.
 Except…
-❯ ....</p></section><footer class=entry-footer><p>git|gitignore|vscode|batou</p>April 27, 2021</footer><a class=entry-link aria-label="post link to How to Globally Gitignore Configuration Files" href=https://jugmac00.github.io/til/how-to-globally-gitignore-configuration-files/></a></article></main><footer class=footer><span>&copy; 2021 <a href=https://jugmac00.github.io>Jürgen Gmach</a></span>
+❯ ....</p></section><footer class=entry-footer><p>git|gitignore|vscode|batou</p>April 27, 2021</footer><a class=entry-link aria-label="post link to How to Globally Gitignore Configuration Files" href=https://jugmac00.github.io/til/how-to-globally-gitignore-configuration-files/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2>How to Deactivate Auto Import in Pylance</h2></header><section class=entry-content><p>Unfortunately, the auto-import feature in PyLance surprised me with random imports.
+e.g. with from unittest.case import expectedFailure just when I typed assert result == expected.
+Luckily, the developers heard on the users, and with version 2020.8.0 this “feature” is optional.
+In order to deactivate it, set the following option to false:
+python.analysis.autoImportCompletions Thank you, Savannah!</p></section><footer class=entry-footer><p>pylance|vscode</p>June 6, 2020</footer><a class=entry-link aria-label="post link to How to Deactivate Auto Import in Pylance" href=https://jugmac00.github.io/til/how-to-deactivate-auto-import-in-pylance/></a></article></main><footer class=footer><span>&copy; 2021 <a href=https://jugmac00.github.io>Jürgen Gmach</a></span>
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
         <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)"><button class=top-link id=top-link type=button accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></button></a>

@@ -84,4 +84,8 @@ systemctl cat nginx ... X-CheckConfigCmd=/nix/store/xxx-nginx-1.14.2/bin/nginx -
 nginx-show-config | less .</description></item><item><title>How to Access Name Based Servers in Development Setup</title><link>https://jugmac00.github.io/til/how-to-access-name-based-servers-in-development-setup/</link><pubDate>Mon, 13 Jul 2020 19:19:18 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-access-name-based-servers-in-development-setup/</guid><description>The problem You run a web application via nginx and you dispatch the requests based on the server name.
 And maybe the server name header only gets set via a proxy or an URL, which is currently or permanent not available in your dev setup.
 The solution curl -- header &amp;#34;Host: example.com&amp;#34; http://localhost Further information Blog post by the maintainer of curl:
-https://daniel.haxx.se/blog/2018/04/05/curl-another-host/</description></item></channel></rss>
+https://daniel.haxx.se/blog/2018/04/05/curl-another-host/</description></item><item><title>How to Deactivate Auto Import in Pylance</title><link>https://jugmac00.github.io/til/how-to-deactivate-auto-import-in-pylance/</link><pubDate>Sat, 06 Jun 2020 09:14:02 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-deactivate-auto-import-in-pylance/</guid><description>Unfortunately, the auto-import feature in PyLance surprised me with random imports.
+e.g. with from unittest.case import expectedFailure just when I typed assert result == expected.
+Luckily, the developers heard on the users, and with version 2020.8.0 this &amp;ldquo;feature&amp;rdquo; is optional.
+In order to deactivate it, set the following option to false:
+python.analysis.autoImportCompletions Thank you, Savannah!</description></item></channel></rss>
