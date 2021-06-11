@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>tox on Jürgen Gmach</title><link>https://jugmac00.github.io/tags/tox/</link><description>Recent content in tox on Jürgen Gmach</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 11 Jun 2021 15:48:12 +0200</lastBuildDate><atom:link href="https://jugmac00.github.io/tags/tox/index.xml" rel="self" type="application/rss+xml"/><item><title>How to Bring Color Back Into Tox and Pytest</title><link>https://jugmac00.github.io/til/how-to-bring-color-back-into-tox-and-pytest/</link><pubDate>Fri, 11 Jun 2021 15:48:12 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-bring-color-back-into-tox-and-pytest/</guid><description>When I first tried the pre-release of the upcoming tox rewrite, I noticed tox itself has funky new colors - which I like a lot&amp;hellip;
+But what happened with the green dots for pytest'soutput?
+You may recall, running the old tox or pytest directly, the dots would be green&amp;hellip;
+why has this changed Honestly, I am not 100% sure.
+But I know how to get the colors back.
+All you need to do is changing this line commands = pytest {posargs} in your tox.</description></item></channel></rss>
