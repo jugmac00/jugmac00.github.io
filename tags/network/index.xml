@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>network on Jürgen Gmach</title><link>https://jugmac00.github.io/tags/network/</link><description>Recent content in network on Jürgen Gmach</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Jul 2021 15:05:06 +0200</lastBuildDate><atom:link href="https://jugmac00.github.io/tags/network/index.xml" rel="self" type="application/rss+xml"/><item><title>How to Debug Network Issues</title><link>https://jugmac00.github.io/til/how-to-debug-network-issues/</link><pubDate>Tue, 06 Jul 2021 15:05:06 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-debug-network-issues/</guid><description>Unlike I stated earlier today&amp;hellip;
+It’s not DNS
+There’s no way it’s DNS
+It was DNS
+&amp;hellip; this time it was not DNS. But let&amp;rsquo;s start from the beginning.
+two lonely OpenSUSE virtual machines I inherited two OpenSUSE VMs from a departing colleague.
+After changing passwords and cataloging what services are installed, I tried to update the VMs&amp;hellip; and got the following errors&amp;hellip;
+# zypper refresh Problem retrieving files from &amp;#39;Haupt-Repository (NON-OSS)&amp;#39;.</description></item></channel></rss>
