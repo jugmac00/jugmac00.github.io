@@ -2,7 +2,7 @@
 first things first git made the default branch name configurable in version 2.28 and higher.
 So, when you run e.g. Ubuntu 20.04 like me, you may have an older version installed.
 Usually, you can&amp;rsquo;t install a newer version without updating the distribution.
-But there is hope, you can install git via a PPA (personal package archive):</description></item><item><title>How to Find Out Which Files Changed Most Often in a Git Repository</title><link>https://jugmac00.github.io/til/how-to-find-out-which-files-changed-most-often-in-a-git-repository/</link><pubDate>Sat, 31 Jul 2021 14:34:02 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-find-out-which-files-changed-most-often-in-a-git-repository/</guid><description>I found this helpful command while cleaning up my Desktop - I cannot recall where I got it from :-/
+But there is hope, you can install a newer git version via a PPA (personal package archive):</description></item><item><title>How to Find Out Which Files Changed Most Often in a Git Repository</title><link>https://jugmac00.github.io/til/how-to-find-out-which-files-changed-most-often-in-a-git-repository/</link><pubDate>Sat, 31 Jul 2021 14:34:02 +0200</pubDate><guid>https://jugmac00.github.io/til/how-to-find-out-which-files-changed-most-often-in-a-git-repository/</guid><description>I found this helpful command while cleaning up my Desktop - I cannot recall where I got it from :-/
 git log --since 6.months.ago --numstat | awk &amp;#39;/^[0-9-]+/{ print $NF}&amp;#39; | sort | uniq -c | sort -nr | head This will list the top 10 most often changed files in your git repository.
 Why would you want to know this?
 Well, several things come to my mind:
