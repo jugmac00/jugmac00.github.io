@@ -19,7 +19,6 @@ def main():
     args = parser.parse_args()
     print(f'Hello {args.name}')
 
-
 if __name__ == '__main__':
     sys.exit(main())
 </code></pre><p>Looks straightforward, works great, but at one point,
@@ -36,7 +35,6 @@ def test_main(capsys):
 </code></pre><p>This certainly works, but there must be a better way, right?</p><h2 id=less-patching-more-passing-in>Less patching, more passing in<a hidden class=anchor aria-hidden=true href=#less-patching-more-passing-in>#</a></h2><p>Indeed, you can rewrite the code as following&mldr;</p><p>&lt;main.py></p><pre><code>import argparse
 import sys
 
-
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', required=True)
@@ -49,7 +47,6 @@ def main(argv=None):
 
     args = parser.parse_args(argv)
     print(f'Hello {args.name}')
-
 
 if __name__ == '__main__':
     sys.exit(main())
