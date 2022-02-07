@@ -2,4 +2,4 @@
 To ease development, I share my home directory with the containers.
 This is convenient, but brings along a couple of issues on its own, especially for .bashrc modifications, which only apply to the host.
 e.g. activating bash completion for pipx.
-eval &amp;quot;$(register-python-argcomplete pipx)&amp;quot; This certainly only works on my host, where the binary is on the path, but not in my development containers.</description></item></channel></rss>
+eval &amp;#34;$(register-python-argcomplete pipx)&amp;#34; This certainly only works on my host, where the binary is on the path, but not in my development containers.</description></item></channel></rss>
