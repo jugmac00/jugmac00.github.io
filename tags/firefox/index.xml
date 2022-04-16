@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>firefox on Jürgen Gmach</title><link>https://jugmac00.github.io/tags/firefox/</link><description>Recent content in firefox on Jürgen Gmach</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 14 Apr 2022 19:49:01 +0200</lastBuildDate><atom:link href="https://jugmac00.github.io/tags/firefox/index.xml" rel="self" type="application/rss+xml"/><item><title>Highlight All Matches in Firefox</title><link>https://jugmac00.github.io/til/highlight-all-matches-in-firefox/</link><pubDate>Thu, 14 Apr 2022 19:49:01 +0200</pubDate><guid>https://jugmac00.github.io/til/highlight-all-matches-in-firefox/</guid><description>Modern browsers are pretty similar, so switching from Chrome to Firefox was no big issue&amp;hellip;
-&amp;hellip; except that when I searched something on a page with STRG + F, only the first match was highlighted.
+&amp;hellip; except that when I searched something on a page with STRG + F / Ctrl + F, only the first match was highlighted.
 This was a major annoyance.
 Was? Yep. Turns out there are two ways to enable highlighting for all matches.
-Via Keyboard Shortcut In search mode you just need to hit Alt + A.
-Hit it again to deactivate it.</description></item></channel></rss>
+Via Keyboard Shortcut In search mode you just need to hit Alt + A.</description></item></channel></rss>
