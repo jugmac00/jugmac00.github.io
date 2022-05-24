@@ -20,7 +20,6 @@ but already many packages which you usually need for a data science project.</p>
 installer for conda. It only contains Python and a small number of other
 useful packages.</p><h3 id=anaconda-again>Anaconda&mldr; again<a hidden class=anchor aria-hidden=true href=#anaconda-again>#</a></h3><p><a href=https://www.anaconda.com/about-us>Anaconda Inc.</a> is the company behind all
 of that.</p><h2 id=conda-basics>Conda basics<a hidden class=anchor aria-hidden=true href=#conda-basics>#</a></h2><h3 id=install-miniconda>Install miniconda<a hidden class=anchor aria-hidden=true href=#install-miniconda>#</a></h3><p>On Ubuntu 20.04 I just executed the following command(s):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh <span style=color:#f92672>&amp;&amp;</span> bash Miniconda3-latest-Linux-x86_64.sh
-
 </code></pre></div><p>But please have a look at the
 <a href=https://docs.conda.io/en/latest/miniconda.html>installation instructions</a>
 for your operating system.</p><h3 id=create-a-new-project>Create a new project<a hidden class=anchor aria-hidden=true href=#create-a-new-project>#</a></h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>conda create --name myproject scikit-learn pandas python<span style=color:#f92672>=</span>3.8
