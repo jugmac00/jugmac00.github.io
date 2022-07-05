@@ -71,7 +71,7 @@ Basically there are two supported template mechanisms:
 Document Template Markup Language (DTML) Zope Page Templates (ZPT) DTML is pretty much outdated for more than a decade, but still in use for the Zope Management Interface.</description></item><item><title>Am I Famous</title><link>https://jugmac00.github.io/blog/am-i-famous/</link><pubDate>Wed, 29 May 2019 13:45:09 +0200</pubDate><guid>https://jugmac00.github.io/blog/am-i-famous/</guid><description>A couple of months ago, Brett Cannon, one of the better known Python core developers, announced on Twitter that he contributed to over 100 open source projects.
 first reaction Woohah! Congratulations!
 second reaction How did he know?
-Everytime I get a PR merged I record the repo&amp;rsquo;s URL for a tool I created to analyze my contributions to OSS.
+Every time I get a PR merged I record the repo&amp;rsquo;s URL for a tool I created to analyze my contributions to OSS.
 Ah&amp;hellip; k. I did not do that.
 third reaction To how many open source projects did I contribute?</description></item><item><title>PyConWeb 2019: Came for the talks, stayed for the raffles</title><link>https://jugmac00.github.io/blog/pyconweb-2019/</link><pubDate>Mon, 27 May 2019 13:39:09 +0200</pubDate><guid>https://jugmac00.github.io/blog/pyconweb-2019/</guid><description>summary of pyconweb 2019 F&amp;hellip; awesome!
 talks and workshops I tried to collect all slides from Twitter and Telegram - in case I missed some, please drop me a line @jugmac00.
