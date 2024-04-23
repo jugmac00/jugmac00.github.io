@@ -9,7 +9,20 @@ I especially enjoy giving lightning and thunder talks.
 I want to thank both the **Google Developer Group** in Regensburg and
 **Python Ireland** for giving me a chance to become a more experienced speaker.
 
-February 2023
+April 2024
+: **PyConDE & PyData Berlin 2024** - In "How to Improve the Python Development
+Experience for Millions of Ubuntu Users" I speak about my passion project - how
+to make the Python development experience on Ubuntu the best it can be.  
+  ([Info](https://pretalx.com/pyconde-pydata-2024/talk/DKL7YQ/))
+  ([Slides](/data/improve.python.development.experience.berlin.pdf))
+
+February 2024
+: **Prague Python Pizza** - I spoke about "Your perfect Python development
+experience on Ubuntu".  
+  ([Info](https://prague.python.pizza/))
+  ([Slides](/data/your.perfect.python.development.experience.prague.pdf))
+
+February 2024
 : **Stockholm Python User Group** - In "Behind the Scenes of tox" I take you on the
   journey of "Rewriting a Tool with more than 10 Million Monthly Downloads".  
   ([Info](https://www.meetup.com/pysthlm/events/299028643/))
