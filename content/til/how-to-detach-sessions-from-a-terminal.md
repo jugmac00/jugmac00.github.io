@@ -21,8 +21,8 @@ during the deployment, as this would stop the deployment right in the middle.
 
 ## Hello terminal multiplexer
 
-Most engineers probably heard of tmux and screen before. They are tools which
-allows detaching sessions from the terminal, so even when your connection dies,
+Most engineers probably heard of tmux and screen before. These tools allow
+detaching sessions from the terminal, so even when your connection dies,
 the session continues to run in the background. Sounds great, right?
 
 I think I used these before on some rare occasions, but certainly not enough to
