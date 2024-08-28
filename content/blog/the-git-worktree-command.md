@@ -54,6 +54,13 @@ This command
 - in a directory one level above called `<some_directory>`
 - based of the `main` branch
 
+
+You can also use an existing branch.
+
+```bash
+git worktree add ../<some_directory> <existing-branch>
+```
+
 ### List all worktrees
 
 ```bash
