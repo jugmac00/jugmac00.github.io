@@ -23,12 +23,14 @@ Experience for Millions of Ubuntu Users" I speak about my passion project - how
 to make the Python development experience on Ubuntu the best it can be.  
   ([Info](https://pretalx.com/pyconde-pydata-2024/talk/DKL7YQ/))
   ([Slides](/data/improve.python.development.experience.berlin.pdf))
+  ([Video](https://www.youtube.com/watch?v=WueCxRoMQ_I))
 
 February 2024
 : **Prague Python Pizza** - I spoke about "Your perfect Python development
 experience on Ubuntu".  
   ([Info](https://prague.python.pizza/))
   ([Slides](/data/your.perfect.python.development.experience.prague.pdf))
+  ([Video](https://www.youtube.com/live/KdFXjYURlws?si=4n4dXPCVOlh8Nu12&t=2787))
 
 February 2024
 : **Stockholm Python User Group** - In "Behind the Scenes of tox" I take you on the
