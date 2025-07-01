@@ -9,6 +9,14 @@ I especially enjoy giving lightning and thunder talks.
 I want to thank both the **Google Developer Group** in Regensburg and
 **Python Ireland** for giving me a chance to become a more experienced speaker.
 
+June 2025
+: **OpenSouthCode in Málaga** - In "Your Very First Contribution to Open
+Source" I show that everybody can contribute to open source, regardless of
+experience, professional status, ... and especially age.
+It is never too late to join the party!  
+  ([Info](https://www.opensouthcode.org/conferences/opensouthcode2025/program/proposals/918))
+  ([Slides](/data/contribute.to.open.source.malaga.pdf))
+
 April 2024
 : **PyConDE & PyData Berlin 2024** - In "How to Improve the Python Development
 Experience for Millions of Ubuntu Users" I speak about my passion project - how
