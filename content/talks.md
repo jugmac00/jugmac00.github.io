@@ -9,6 +9,14 @@ I especially enjoy giving lightning and thunder talks.
 I want to thank both the **Google Developer Group** in Regensburg and
 **Python Ireland** for giving me a chance to become a more experienced speaker.
 
+July 2025
+: **EuroPython 2025 in Prague** - In "Your Very First Contribution to Open
+Source" I show that everybody can contribute to open source, regardless of
+experience, professional status, ... and especially age.
+It is never too late to join the party!  
+  ([Info](https://ep2025.europython.eu/session/your-very-first-contribution-to-open-source))
+  ([Slides](/data/contribute.to.open.source.prague.pdf))
+
 June 2025
 : **OpenSouthCode in Málaga** - In "Your Very First Contribution to Open
 Source" I show that everybody can contribute to open source, regardless of
