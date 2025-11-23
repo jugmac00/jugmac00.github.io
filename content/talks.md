@@ -16,6 +16,7 @@ experience, professional status, ... and especially age.
 It is never too late to join the party!  
   ([Info](https://ep2025.europython.eu/session/your-very-first-contribution-to-open-source))
   ([Slides](/data/contribute.to.open.source.prague.pdf))
+  ([Video](https://www.youtube.com/watch?v=-1eUoRbe4t4))
 
 June 2025
 : **OpenSouthCode in Málaga** - In "Your Very First Contribution to Open
