@@ -1,6 +1,9 @@
 ---
 title: "GPG - All I Need to Know"
 date: 2021-07-22T16:40:59+02:00
+tags:
+- gpg
+- pgp
 ---
 
 While I need to use GPG pretty regularly,
@@ -88,7 +91,7 @@ gpg --keyserver keyserver.ubuntu.com --search-key some-key-id
 gpg --keyserver keyserver.ubuntu.com --search-key someone@example.com
 ```
 
-## import a public key from the file system
+## import a key from the file system
 
 ```bash
 gpg --import key.asc
@@ -104,7 +107,7 @@ gpg --keyserver keys.openpgp.org --send-keys key-id
 ## extend the key expiration date
 
 ```bash
-gpg --edit me@example.com
+gpg --edit-key me@example.com
 >expire
 ...
 ```
@@ -120,12 +123,26 @@ gpg --import revoke.asc
 gpg --keyserver keys.openpgp.org --send-keys key-id
 ```
 
+## export a key
+
+```bash
+# public key
+gpg --output public.pgp --armor --export username@email
+
+# private key
+gpg --output private.pgp --armor --export-secret-key username@email
+```
 
 ## feedback
 
 Did I miss anything? What commands do you regularly use?
 
 ## update
+
+### 2025-12-25
+
+- fix syntax for extening key
+- add how to export a key
 
 ### 2023-03-27
 
