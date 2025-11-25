@@ -141,7 +141,7 @@ Did I miss anything? What commands do you regularly use?
 
 ### 2025-12-25
 
-- fix syntax for extening key
+- fix syntax for extending key
 - add how to export a key
 
 ### 2023-03-27
