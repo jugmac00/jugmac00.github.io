@@ -5,6 +5,8 @@ theme = "PaperMod"
 
 [params]
 defaultTheme = "auto"
+author = "Jürgen Gmach"
+hideAuthor = true
 
 # Shown on the home page
 socialIcons = [
